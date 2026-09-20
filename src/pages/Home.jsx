@@ -1,6 +1,6 @@
 import { useEffect, useRef } from 'react'
 import { Link } from 'react-router-dom'
-import { FiArrowRight, FiStar, FiCompass, FiUsers, FiCamera, FiMountain, FiMapPin } from 'react-icons/fi'
+import { FiArrowRight, FiStar, FiCompass, FiUsers, FiCamera, FiMap, FiMapPin } from 'react-icons/fi'
 import './Home.css'
 
 const stats = [
@@ -58,7 +58,7 @@ const destinations = [
 const categories = [
   { icon: <FiCompass />, title: 'Historical Tours', desc: 'Walk through 3 million years of human civilization across Axum, Lalibela, and Gondar.', path: '/tours' },
   { icon: <FiUsers />, title: 'Cultural & Tribal', desc: 'Immerse yourself in the living traditions of the Omo Valley\'s incredible indigenous tribes.', path: '/tours' },
-  { icon: <FiMountain />, title: 'Adventure & Trek', desc: 'Conquer the peaks of the Simien Mountains or venture into the volcanic Danakil Depression.', path: '/tours' },
+  { icon: <FiMap />, title: 'Adventure & Trek', desc: 'Conquer the peaks of the Simien Mountains or venture into the volcanic Danakil Depression.', path: '/tours' },
   { icon: <FiCamera />, title: 'Photographic Tours', desc: 'Capture Ethiopia\'s stunning landscapes, ancient churches, and vibrant cultures through your lens.', path: '/tours' },
 ]
 
