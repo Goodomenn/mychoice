@@ -1,0 +1,116 @@
+.dest-intro {
+  display: flex;
+  align-items: flex-start;
+  gap: 60px;
+  padding-bottom: 0;
+}
+
+.dest-intro__text {
+  flex: 1;
+  font-size: 1.05rem;
+  color: var(--color-text-dim);
+  line-height: 1.9;
+  max-width: 720px;
+}
+
+/* Detail Row */
+.dest-detail {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 72px;
+  align-items: center;
+  padding: 72px 0;
+  border-bottom: 1px solid var(--color-border);
+}
+
+.dest-detail:last-child { border-bottom: none; }
+
+.dest-detail--reverse { direction: rtl; }
+.dest-detail--reverse > * { direction: ltr; }
+
+.dest-detail__image-wrap {
+  position: relative;
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+}
+
+.dest-detail__img {
+  width: 100%;
+  height: 440px;
+  object-fit: cover;
+  transition: transform 0.6s var(--ease);
+}
+
+.dest-detail__image-wrap:hover .dest-detail__img { transform: scale(1.04); }
+
+.dest-detail__tag {
+  position: absolute;
+  top: 20px;
+  left: 20px;
+  background: rgba(10, 10, 10, 0.82);
+  backdrop-filter: blur(10px);
+  border: 1px solid var(--color-border);
+  color: var(--color-gold);
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  padding: 7px 14px;
+  border-radius: 2px;
+}
+
+.dest-detail__title {
+  font-family: var(--font-heading);
+  font-size: clamp(1.8rem, 3vw, 2.6rem);
+  font-weight: 700;
+  color: var(--color-cream);
+  line-height: 1.15;
+  margin-bottom: 20px;
+}
+
+.dest-detail__desc {
+  font-size: 0.97rem;
+  color: var(--color-text-dim);
+  line-height: 1.9;
+  margin-bottom: 20px;
+}
+
+.dest-detail__access {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 0.82rem;
+  color: var(--color-gold);
+  margin-bottom: 28px;
+  font-weight: 500;
+}
+
+.dest-detail__highlights {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px 20px;
+  margin-bottom: 36px;
+}
+
+.dest-detail__highlights li {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 0.88rem;
+  color: var(--color-text-dim);
+}
+
+.dest-highlight-dot {
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: var(--color-gold);
+  flex-shrink: 0;
+}
+
+@media (max-width: 900px) {
+  .dest-intro { flex-direction: column; gap: 24px; }
+  .dest-detail { grid-template-columns: 1fr; gap: 36px; }
+  .dest-detail--reverse { direction: ltr; }
+  .dest-detail__img { height: 280px; }
+}
