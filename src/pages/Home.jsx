@@ -1,298 +1,559 @@
-import { useEffect, useRef } from 'react'
+import { useState, useEffect } from 'react'
 import { Link } from 'react-router-dom'
-import { FiArrowRight, FiStar, FiCompass, FiUsers, FiCamera, FiMap, FiMapPin } from 'react-icons/fi'
+import { 
+  FiArrowRight, 
+  FiStar, 
+  FiCompass, 
+  FiMapPin, 
+  FiCalendar, 
+  FiClock, 
+  FiCheckCircle, 
+  FiShield, 
+  FiAward, 
+  FiMap,
+  FiTruck,
+  FiFileText,
+  FiChevronLeft,
+  FiChevronRight
+} from 'react-icons/fi'
+import { 
+  FaSignHanging, 
+  FaLandmark, 
+  FaWater, 
+  FaPersonHiking, 
+  FaShip, 
+  FaCompass,
+  FaHandshake,
+  FaScaleBalanced
+} from 'react-icons/fa6'
 import './Home.css'
 
-const stats = [
-  { num: '3M+', label: 'Years of Human History' },
-  { num: '9', label: 'UNESCO World Heritage Sites' },
-  { num: '80+', label: 'Ethnic Groups & Languages' },
-  { num: '500+', label: 'Happy Travelers Guided' },
-]
-
-const destinations = [
+// Categories matching the arch cards from Triply design
+const categories = [
   {
     id: 1,
-    name: 'Lalibela',
-    tag: 'Historical',
-    desc: 'Eleven medieval rock-hewn churches carved from a single stone, a UNESCO marvel and Ethiopia\'s holiest pilgrimage site.',
-    img: 'https://images.unsplash.com/photo-1604580864964-0462f5d5b1a8?w=600&q=80',
+    title: 'City Tours',
+    count: '5 Tours',
+    price: '$550',
+    img: '/images/city.jpg',
+    icon: <FaSignHanging />,
+    link: '/destinations'
   },
   {
     id: 2,
-    name: 'Simien Mountains',
-    tag: 'Adventure',
-    desc: 'Jagged peaks and 1,500m precipices — a UNESCO Natural Heritage refuge for endemic gelada baboons and Ethiopian wolves.',
-    img: 'https://images.unsplash.com/photo-1598430772299-8a97f3d9d1d0?w=600&q=80',
+    title: 'Museum Tours',
+    count: '5 Tours',
+    price: '$450',
+    img: '/images/museum.png',
+    icon: <FaLandmark />,
+    link: '/destinations'
   },
   {
     id: 3,
-    name: 'Omo Valley Tribes',
-    tag: 'Cultural',
-    desc: 'Home to some of the world\'s last isolated tribes — vivid body painting, ancient rituals, and timeless traditions.',
-    img: 'https://images.unsplash.com/photo-1578662996442-48f60103fc96?w=600&q=80',
+    title: 'Beaches & Lakes',
+    count: '10 Tours',
+    price: '$100',
+    img: '/images/lakes.png',
+    icon: <FaWater />,
+    link: '/destinations'
   },
   {
     id: 4,
-    name: 'Danakil Depression',
-    tag: 'Adventure',
-    desc: 'One of earth\'s most alien landscapes — bubbling lava lakes, salt deserts, and sulfuric hot springs ablaze in color.',
-    img: 'https://images.unsplash.com/photo-1589308078059-be1415eab4c3?w=600&q=80',
+    title: 'Hiking',
+    count: '4 Tours',
+    price: '$250',
+    img: 'https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?w=600&q=80',
+    icon: <FaPersonHiking />,
+    link: '/tours'
   },
   {
     id: 5,
-    name: 'Axum',
-    tag: 'Historical',
-    desc: 'Heart of ancient Ethiopian civilization, home of the Queen of Sheba and the revered Ark of the Covenant.',
-    img: 'https://images.unsplash.com/photo-1571406252241-db0280bd36cd?w=600&q=80',
-  },
-  {
-    id: 6,
-    name: 'Bale Mountains',
-    tag: 'Wildlife',
-    desc: 'Africa\'s largest Afro-alpine habitat with the rare Ethiopian wolf, mountain nyala, and Africa\'s highest road.',
-    img: 'https://images.unsplash.com/photo-1516426122078-c23e76319801?w=600&q=80',
-  },
+    title: 'Cruises & Boats',
+    count: '8 Tours',
+    price: '$100',
+    img: 'https://images.unsplash.com/photo-1548574505-5e239809ee19?w=600&q=80',
+    icon: <FaShip />,
+    link: '/tours'
+  }
 ]
 
-const categories = [
-  { icon: <FiCompass />, title: 'Historical Tours', desc: 'Walk through 3 million years of human civilization across Axum, Lalibela, and Gondar.', path: '/tours' },
-  { icon: <FiUsers />, title: 'Cultural & Tribal', desc: 'Immerse yourself in the living traditions of the Omo Valley\'s incredible indigenous tribes.', path: '/tours' },
-  { icon: <FiMap />, title: 'Adventure & Trek', desc: 'Conquer the peaks of the Simien Mountains or venture into the volcanic Danakil Depression.', path: '/tours' },
-  { icon: <FiCamera />, title: 'Photographic Tours', desc: 'Capture Ethiopia\'s stunning landscapes, ancient churches, and vibrant cultures through your lens.', path: '/tours' },
-]
-
-const testimonials = [
+// Featured Tours
+const featuredTours = [
   {
     id: 1,
-    name: 'Sarah Mitchell',
-    country: 'United Kingdom',
-    rating: 5,
-    text: 'MyChoiceEthiopia exceeded every expectation. The Lalibela sunrise was the most spiritual experience of my life. Our guide\'s knowledge was unparalleled.',
+    title: 'Historic Lalibela Rock-Hewn Churches',
+    duration: '4 Days / 3 Nights',
+    location: 'Lalibela, Amhara',
+    price: '$680',
+    rating: 4.9,
+    reviews: 48,
+    badge: 'Popular',
+    img: 'https://images.unsplash.com/photo-1604580864964-0462f5d5b1a8?w=800&q=80'
   },
   {
     id: 2,
-    name: 'David Fontaine',
-    country: 'France',
-    rating: 5,
-    text: 'The Omo Valley cultural tour was extraordinary. We felt welcomed, never like tourists. Absolutely premium from start to finish.',
+    title: 'Simien Mountains Roof of Africa Trek',
+    duration: '5 Days / 4 Nights',
+    location: 'Simien National Park',
+    price: '$790',
+    rating: 5.0,
+    reviews: 32,
+    badge: 'Adventure',
+    img: 'https://images.unsplash.com/photo-1598430772299-8a97f3d9d1d0?w=800&q=80'
   },
   {
     id: 3,
-    name: 'Priya Nair',
-    country: 'United States',
-    rating: 5,
-    text: 'Danakil Depression was terrifying and magical at the same time. Every detail was perfectly organized. Ethiopia changed how I see the world.',
-  },
+    title: 'Danakil Depression & Erta Ale Volcano',
+    duration: '3 Days / 2 Nights',
+    location: 'Afar Triangle',
+    price: '$620',
+    rating: 4.9,
+    reviews: 29,
+    badge: 'Expedition',
+    img: 'https://images.unsplash.com/photo-1589308078059-be1415eab4c3?w=800&q=80'
+  }
 ]
 
-// Scroll reveal hook
-function useScrollReveal() {
-  useEffect(() => {
-    const els = document.querySelectorAll('.reveal')
-    const observer = new IntersectionObserver(
-      entries => entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible') }),
-      { threshold: 0.12 }
-    )
-    els.forEach(el => observer.observe(el))
-    return () => observer.disconnect()
-  }, [])
-}
+// Feature items for "We create the trips you love"
+const features = [
+  {
+    id: 1,
+    title: '17 Grade-8 Certified Operators',
+    desc: 'Mandatory defensive driving, mechanical field literacy, and regional dialect fluency ensuring uncompromising passenger safety.'
+  },
+  {
+    id: 2,
+    title: '3 Regional Logistical Depots',
+    desc: 'Physical operational bases in Addis Ababa, Semera (Afar Gate), and Mekelle (Tigray) for immediate on-the-ground support.'
+  },
+  {
+    id: 3,
+    title: 'Rigorous Corporate Governance',
+    desc: 'Strict anti-bribery policies, child labor prohibition, and leave-no-trace ecological protocols aligned with UN principles.'
+  }
+]
+
+// Authentic Ethiopian landmark images uploaded by user for the hero slideshow
+const heroSlides = [
+  {
+    id: 1,
+    image: '/hero-slides/slide-1-lalibela.png',
+    title: 'Lalibela Rock-Hewn Churches',
+    location: 'Lalibela, Amhara',
+    badge: 'UNESCO World Heritage'
+  },
+  {
+    id: 2,
+    image: '/hero-slides/slide-2-gondar-castles.png',
+    title: 'Fasil Ghebbi Royal Enclosure',
+    location: 'Gondar, Camelot of Africa',
+    badge: '17th Century Imperial Citadel'
+  },
+  {
+    id: 3,
+    image: '/hero-slides/slide-3-gondar-arch.png',
+    title: 'Historic Castles of Gondar',
+    location: 'Ancient Stone Gateways',
+    badge: 'Medieval Architectural Marvel'
+  },
+  {
+    id: 4,
+    image: '/hero-slides/slide-4-gheralta.png',
+    title: 'Gheralta Sandstone Mountains',
+    location: 'Hawzen, Tigray',
+    badge: 'Sky-High Rock Churches'
+  },
+  {
+    id: 5,
+    image: '/hero-slides/slide-5-danakil.png',
+    title: 'Danakil Depression & Dallol Springs',
+    location: 'Afar Triangle',
+    badge: 'Vibrant Geothermal Wonder'
+  }
+]
 
 export default function Home() {
-  useScrollReveal()
+  const [currentSlide, setCurrentSlide] = useState(0)
+  const [isPaused, setIsPaused] = useState(false)
+
+  // Auto-advance slideshow every 5 seconds (pauses on hover)
+  useEffect(() => {
+    if (isPaused) return
+    const timer = setInterval(() => {
+      setCurrentSlide((prev) => (prev + 1) % heroSlides.length)
+    }, 5000)
+    return () => clearInterval(timer)
+  }, [isPaused])
+
+  const nextSlide = () => {
+    setCurrentSlide((prev) => (prev + 1) % heroSlides.length)
+  }
+
+  const prevSlide = () => {
+    setCurrentSlide((prev) => (prev - 1 + heroSlides.length) % heroSlides.length)
+  }
 
   return (
-    <div className="home">
-      {/* ===== HERO ===== */}
-      <section className="hero">
-        <div className="hero__bg" />
-        <div className="hero__overlay" />
-        <div className="hero__grain" />
-        <div className="container hero__content">
-          <div className="hero__badge badge reveal">
-            <FiStar size={11} />
-            Award-Winning Local Tour Operator
-          </div>
-          <h1 className="hero__title reveal">
-            Discover the<br />
-            <em>Birthplace of</em><br />
-            Humanity
-          </h1>
-          <p className="hero__subtitle reveal">
-            Ethiopia — ancient, wild, and breathtaking. Let MyChoiceEthiopia craft your once-in-a-lifetime journey through one of Africa's most extraordinary destinations.
-          </p>
-          <div className="hero__actions reveal">
-            <Link to="/tours" className="btn btn-primary">
-              <span>Explore Tours</span>
-              <FiArrowRight />
-            </Link>
-            <Link to="/destinations" className="btn btn-outline">
-              <span>Our Destinations</span>
-            </Link>
-          </div>
-        </div>
-        <div className="hero__scroll-hint">
-          <span />
-          Scroll to discover
-        </div>
-      </section>
-
-      {/* ===== STATS ===== */}
-      <section className="stats-bar">
-        <div className="container stats-bar__grid">
-          {stats.map((s, i) => (
-            <div key={i} className="stats-bar__item">
-              <span className="stats-bar__num">{s.num}</span>
-              <span className="stats-bar__label">{s.label}</span>
+    <div className="triply-home">
+      {/* ============================================================ */}
+      {/* 1. HERO SECTION WITH BACKGROUND SLIDESHOW                    */}
+      {/* ============================================================ */}
+      <section 
+        className="triply-hero"
+        onMouseEnter={() => setIsPaused(true)}
+        onMouseLeave={() => setIsPaused(false)}
+      >
+        {/* Animated Background Slides */}
+        <div className="triply-hero__slides">
+          {heroSlides.map((slide, index) => (
+            <div 
+              key={slide.id} 
+              className={`hero-slide ${index === currentSlide ? 'active' : ''}`}
+            >
+              <img 
+                src={slide.image} 
+                alt={slide.title} 
+                className="hero-slide__img"
+              />
             </div>
           ))}
+          <div className="triply-hero__overlay"></div>
         </div>
-      </section>
 
-      {/* ===== INTRO ===== */}
-      <section className="section home-intro">
-        <div className="container home-intro__grid">
-          <div className="home-intro__image reveal">
-            <img
-              src="https://images.unsplash.com/photo-1604580864964-0462f5d5b1a8?w=800&q=80"
-              alt="Lalibela Rock Churches"
-            />
-            <div className="home-intro__image-badge">
-              <FiMapPin size={16} />
-              <span>Lalibela, Ethiopia</span>
+        <div className="container triply-hero__container">
+          {/* Active Landmark Subtitle Pill */}
+          <div className="hero-slide-badge-wrap">
+            <span className="slide-pulse-dot"></span>
+            <span className="slide-landmark-title">{heroSlides[currentSlide].title}</span>
+            <span className="slide-sep">•</span>
+            <span className="slide-landmark-loc">{heroSlides[currentSlide].location}</span>
+          </div>
+
+          <div className="triply-hero__content">
+            {/* Big Bold Headline with Script Accent */}
+            <div className="triply-hero__headline-wrap">
+              <h1 className="triply-hero__title">
+                <span className="title-row-top">Unforgettable</span>
+                <span className="title-row-bottom">
+                  <span className="script-accent">travel</span>
+                  <span className="title-word">Experiences</span>
+                </span>
+              </h1>
+            </div>
+
+            {/* Bottom Right CTA Box */}
+            <div className="triply-hero__cta-box">
+              <p className="triply-hero__cta-text">
+                Find amazing things to do.<br />
+                Anytime, anywhere.
+              </p>
+              <Link to="/tours" className="triply-btn-orange">
+                <span>Explore Our Tours</span>
+                <FiArrowRight size={16} />
+              </Link>
             </div>
           </div>
-          <div className="home-intro__text">
-            <span className="section-label reveal">About Ethiopia</span>
-            <span className="gold-divider reveal" />
-            <h2 className="section-title reveal">
-              A Land Beyond Imagination
-            </h2>
-            <p className="reveal" style={{ color: 'var(--color-text-dim)', marginBottom: '20px', lineHeight: '1.9' }}>
-              Located in the Horn of Africa, Ethiopia is a rugged, landlocked country bisected by the Great Rift Valley. With archaeological finds dating back more than <strong style={{ color: 'var(--color-gold)' }}>3 million years</strong>, it is a cradle of ancient civilization.
-            </p>
-            <p className="reveal" style={{ color: 'var(--color-text-dim)', marginBottom: '36px', lineHeight: '1.9' }}>
-              The birthplace of humanity — home to unique tribes, ancient kingdoms, abundant wildlife, and landscapes that seem from another world. Ethiopia's vast size, twice that of Texas, means every trip reveals something new.
-            </p>
-            <Link to="/destinations" className="btn btn-gold-outline reveal">
-              <span>Explore Destinations</span>
-              <FiArrowRight />
-            </Link>
-          </div>
-        </div>
-      </section>
 
-      {/* ===== DESTINATIONS ===== */}
-      <section className="section home-destinations">
-        <div className="container">
-          <div className="section-header centered">
-            <span className="section-label">Top Destinations</span>
-            <span className="gold-divider centered" />
-            <h2 className="section-title reveal">Ethiopia's Finest Wonders</h2>
-            <p className="section-subtitle reveal" style={{ margin: '0 auto' }}>
-              From ancient rock churches to volcanic landscapes — every destination tells a story millions of years in the making.
-            </p>
-          </div>
-          <div className="dest-grid">
-            {destinations.map((d, i) => (
-              <Link to="/destinations" key={d.id} className={`dest-card reveal ${i === 0 ? 'dest-card--large' : ''}`}>
-                <img src={d.img} alt={d.name} className="dest-card__img" loading="lazy" />
-                <div className="dest-card__overlay" />
-                <div className="dest-card__content">
-                  <span className="dest-card__tag">{d.tag}</span>
-                  <h3 className="dest-card__title">{d.name}</h3>
-                  <p className="dest-card__desc">{d.desc}</p>
-                  <span className="dest-card__cta">
-                    Explore <FiArrowRight size={14} />
-                  </span>
-                </div>
-              </Link>
-            ))}
-          </div>
-        </div>
-      </section>
+          {/* Slider Navigation Bar */}
+          <div className="hero-slider-controls">
+            <button onClick={prevSlide} className="hero-nav-btn" aria-label="Previous Slide">
+              <FiChevronLeft size={20} />
+            </button>
 
-      {/* ===== TOUR CATEGORIES ===== */}
-      <section className="section home-categories">
-        <div className="container">
-          <div className="section-header">
-            <span className="section-label">How We Travel</span>
-            <span className="gold-divider" />
-            <h2 className="section-title reveal">Curated for Every Traveler</h2>
-            <p className="section-subtitle reveal">
-              Whether you seek ancient history, tribal culture, wild adventure, or photographic magic — we have the perfect journey for you.
-            </p>
-          </div>
-          <div className="cat-grid">
-            {categories.map((c, i) => (
-              <Link to={c.path} key={i} className="cat-card reveal">
-                <div className="cat-card__icon">{c.icon}</div>
-                <h3 className="cat-card__title">{c.title}</h3>
-                <p className="cat-card__desc">{c.desc}</p>
-                <span className="cat-card__arrow"><FiArrowRight /></span>
-              </Link>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* ===== WHY CHOOSE US ===== */}
-      <section className="section home-why">
-        <div className="container home-why__grid">
-          <div className="home-why__text">
-            <span className="section-label">Why MyChoiceEthiopia</span>
-            <span className="gold-divider" />
-            <h2 className="section-title reveal">The Premium Ethiopia<br />Experience</h2>
-            <div className="why-list">
-              {[
-                { title: 'Local Expertise', desc: 'Born and raised in Ethiopia — our guides carry knowledge no foreign operator can match.' },
-                { title: 'Tailored Itineraries', desc: 'Every tour is custom-built for you. No cookie-cutter packages, ever.' },
-                { title: 'Small Groups Only', desc: 'Maximum 8 travelers per group for an intimate, immersive experience.' },
-                { title: 'Fully Supported', desc: '24/7 in-country support, premium transport, and handpicked accommodations.' },
-              ].map((w, i) => (
-                <div key={i} className="why-item reveal">
-                  <span className="why-item__num">0{i + 1}</span>
-                  <div>
-                    <h4 className="why-item__title">{w.title}</h4>
-                    <p className="why-item__desc">{w.desc}</p>
-                  </div>
-                </div>
+            <div className="hero-nav-dots">
+              {heroSlides.map((s, idx) => (
+                <button
+                  key={s.id}
+                  onClick={() => setCurrentSlide(idx)}
+                  className={`hero-dot-btn ${idx === currentSlide ? 'active' : ''}`}
+                  aria-label={`Slide ${idx + 1}: ${s.title}`}
+                >
+                  <span className="dot-bar"></span>
+                  <span className="dot-tooltip">{s.title}</span>
+                </button>
               ))}
             </div>
+
+            <button onClick={nextSlide} className="hero-nav-btn" aria-label="Next Slide">
+              <FiChevronRight size={20} />
+            </button>
           </div>
-          <div className="home-why__images reveal">
-            <img src="https://images.unsplash.com/photo-1516426122078-c23e76319801?w=700&q=80" alt="Ethiopia Safari" className="why-img why-img--main" />
-            <img src="https://images.unsplash.com/photo-1571406252241-db0280bd36cd?w=400&q=80" alt="Ethiopia Culture" className="why-img why-img--small" />
-            <div className="why-award">
-              <FiStar className="why-award__star" />
-              <span className="why-award__text">National Geographic<br /><strong>Partner Operator</strong></span>
+        </div>
+      </section>
+
+      {/* ============================================================ */}
+      {/* 2. DUAL-FUNNEL INTENT SWITCHER                               */}
+      {/* ============================================================ */}
+      <section className="dual-funnel-section">
+        <div className="container">
+          <div className="dual-funnel-card">
+            <div className="funnel-col b2c-funnel">
+              <div className="funnel-badge b2c-badge">B2C LEISURE & CULTURAL EXPEDITIONS</div>
+              <h3 className="funnel-title">International Travelers & Private Explorers</h3>
+              <p className="funnel-desc">
+                Immersive bespoke journeys across Lalibela, Simien Mountains, and Danakil Depression 
+                with dedicated bilingual guides, luxury 4x4 vehicles, and 24/7 travel concierge.
+              </p>
+              <Link to="/tours" className="funnel-btn b2c-btn">
+                <span>Browse Guided Tours</span>
+                <FiArrowRight size={16} />
+              </Link>
+            </div>
+
+            <div className="funnel-divider">
+              <span className="divider-text">OR</span>
+            </div>
+
+            <div className="funnel-col b2b-funnel">
+              <div className="funnel-badge b2b-badge">BESPOKE PRIVATE & VIP EXPEDITIONS</div>
+              <h3 className="funnel-title">Tailor-Made VIP & Group Expeditions</h3>
+              <p className="funnel-desc">
+                Custom private itineraries crafted by senior tour designers, luxury accommodations, 
+                private domestic flight charters, and personalized 24/7 concierge support.
+              </p>
+              <Link to="/contact" className="funnel-btn b2b-btn">
+                <span>Request Custom Itinerary</span>
+                <FiArrowRight size={16} />
+              </Link>
             </div>
           </div>
         </div>
       </section>
 
-      {/* ===== TESTIMONIALS ===== */}
-      <section className="section home-testimonials">
+      {/* ============================================================ */}
+      {/* 3. QUANTITATIVE OPERATIONAL METRICS                          */}
+      {/* ============================================================ */}
+      <section className="triply-stats-section">
         <div className="container">
-          <div className="section-header centered">
-            <span className="section-label">Traveler Stories</span>
-            <span className="gold-divider centered" />
-            <h2 className="section-title reveal">Voices from the Journey</h2>
+          <div className="stats-grid">
+            <div className="stat-card">
+              <span className="stat-number">12+</span>
+              <span className="stat-label">Years Operating Excellence</span>
+              <span className="stat-sub">Across All Ethiopian Corridors</span>
+            </div>
+
+            <div className="stat-card">
+              <span className="stat-number">32</span>
+              <span className="stat-label">Dedicated Personnel</span>
+              <span className="stat-sub">Permanent Operations & Field Team</span>
+            </div>
+
+            <div className="stat-card">
+              <span className="stat-number">17</span>
+              <span className="stat-label">Grade-8 Certified Drivers</span>
+              <span className="stat-sub">Multilingual Off-Road Chauffeurs</span>
+            </div>
+
+            <div className="stat-card">
+              <span className="stat-number">3</span>
+              <span className="stat-label">Regional Logistics Hubs</span>
+              <span className="stat-sub">Addis Ababa • Semera • Mekelle</span>
+            </div>
           </div>
-          <div className="testi-grid">
-            {testimonials.map(t => (
-              <div key={t.id} className="testi-card reveal">
-                <div className="testi-card__stars">
-                  {[...Array(t.rating)].map((_, i) => <FiStar key={i} className="testi-card__star" />)}
-                </div>
-                <p className="testi-card__text">"{t.text}"</p>
-                <div className="testi-card__author">
-                  <div className="testi-card__avatar">{t.name[0]}</div>
-                  <div>
-                    <span className="testi-card__name">{t.name}</span>
-                    <span className="testi-card__country">{t.country}</span>
+        </div>
+      </section>
+
+      {/* ============================================================ */}
+      {/* 4. PLAN YOUR TRIP / CATEGORIES SECTION                       */}
+      {/* ============================================================ */}
+      <section className="triply-section triply-categories-section">
+        {/* Palm Leaf Decor Accent */}
+        <div className="palm-leaf-accent">
+          <svg viewBox="0 0 200 200" fill="none" className="palm-svg">
+            <path d="M180 20C120 40 60 100 20 180M180 20C140 60 100 120 80 180M180 20C160 80 140 140 130 190M180 20C170 100 165 150 160 200" stroke="#2D6A4F" strokeWidth="6" strokeLinecap="round" opacity="0.85" />
+            <path d="M120 40C110 20 90 10 70 20M140 60C130 40 110 30 90 40M160 80C150 60 130 50 110 60M170 100C160 80 140 70 120 80M165 120C155 100 135 90 115 100" stroke="#52B788" strokeWidth="4" strokeLinecap="round" opacity="0.85" />
+          </svg>
+        </div>
+
+        <div className="container">
+          {/* Section Header */}
+          <div className="categories-header-row">
+            <div className="categories-header-left">
+              <span className="section-script-subtitle">Plan your trip</span>
+              <h2 className="section-main-heading">
+                Let us plan you a<br />perfect Holiday
+              </h2>
+            </div>
+            <div className="categories-header-right">
+              <Link to="/destinations" className="triply-btn-outline">
+                <span>Browse Categories</span>
+                <FiArrowRight size={15} />
+              </Link>
+            </div>
+          </div>
+
+          {/* Arch Shape Cards Grid */}
+          <div className="arch-cards-grid">
+            {categories.map((cat) => (
+              <Link to={cat.link} key={cat.id} className="arch-card">
+                <div className="arch-card__image-wrap">
+                  <img src={cat.img} alt={cat.title} className="arch-card__img" />
+                  <div className="arch-card__icon-badge">
+                    {cat.icon}
                   </div>
+                </div>
+
+                <div className="arch-card__info">
+                  <h3 className="arch-card__title">{cat.title}</h3>
+                  <div className="arch-card__meta">
+                    <span className="arch-card__count">{cat.count}</span>
+                    <span className="arch-card__dot">-</span>
+                    <span className="arch-card__price">From <strong>{cat.price}</strong></span>
+                  </div>
+                </div>
+              </Link>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* ============================================================ */}
+      {/* 5. INSTITUTIONAL TRUST & VENDOR COMPLIANCE STRIP             */}
+      {/* ============================================================ */}
+      <section className="triply-trust-strip">
+        <div className="container">
+          <div className="trust-strip-inner">
+            <div className="trust-info">
+              <div className="trust-badge">
+                <FiShield className="trust-icon" />
+                <span>OFFICIAL ETHIOPIAN VENDOR ENTITY</span>
+              </div>
+              <h3 className="trust-heading">Engineered for Institutional Reliability</h3>
+              <p className="trust-text">
+                Fully compliant under Business License <strong>14/666/128419/2005</strong>, VAT <strong>80692</strong>, 
+                and verified SIGTAS tax status. We provide standardized 30-day post-paid credit facilities, 
+                logbook tracking, and dedicated operations coordinators in Addis Ababa, Semera, and Mekelle.
+              </p>
+            </div>
+            <div className="trust-actions">
+              <Link to="/contact" className="triply-btn-orange">
+                <span>Plan Your Journey</span>
+                <FiArrowRight size={16} />
+              </Link>
+              <Link to="/governance" className="trust-link-secondary">
+                <span>Governance Policies</span>
+                <FiArrowRight size={14} />
+              </Link>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* ============================================================ */}
+      {/* 6. MAKE IT MEMORABLE / WE CREATE THE TRIPS YOU LOVE          */}
+      {/* ============================================================ */}
+      <section className="triply-section triply-features-section">
+        <div className="container">
+          <div className="features-layout">
+            {/* Left Traveler Composite Graphic */}
+            <div className="features-graphic-side">
+              <div className="traveler-composite-card">
+                <div className="watercolor-backdrop"></div>
+                <div className="landmarks-sketch">
+                  <span className="sketch-bird bird-1">✦</span>
+                  <span className="sketch-bird bird-2">✦</span>
+                  <span className="sketch-plane">✈</span>
+                </div>
+                <img 
+                  src="https://images.unsplash.com/photo-1527631746610-bca00a040d60?w=800&q=85" 
+                  alt="Joyful traveler sitting on suitcase" 
+                  className="traveler-photo"
+                />
+                <div className="floating-badge-award">
+                  <FiAward size={20} className="award-icon" />
+                  <div>
+                    <strong>12+ Years</strong>
+                    <span>Ethiopian Tour Excellence</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            {/* Right Content Side */}
+            <div className="features-content-side">
+              <span className="section-script-subtitle">Make it memorable</span>
+              <h2 className="section-main-heading">
+                We create the<br />trips you love
+              </h2>
+              <p className="features-desc">
+                With 12+ years of in-depth logistical mastery and local field presence across Ethiopia, 
+                we combine luxurious traveler comfort with battle-tested expedition and fleet safety.
+              </p>
+
+              {/* Feature Cards List */}
+              <div className="feature-cards-list">
+                {features.map((f) => (
+                  <div key={f.id} className="feature-card-item">
+                    <div className="feature-icon-circle">
+                      <FaCompass size={20} />
+                    </div>
+                    <div className="feature-card-text">
+                      <h4 className="feature-card-title">{f.title}</h4>
+                      <p className="feature-card-desc">{f.desc}</p>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* ============================================================ */}
+      {/* 7. FEATURED PACKAGES                                         */}
+      {/* ============================================================ */}
+      <section className="triply-section triply-packages-section">
+        <div className="container">
+          <div className="categories-header-row">
+            <div className="categories-header-left">
+              <span className="section-script-subtitle">Popular Packages</span>
+              <h2 className="section-main-heading">Featured Guided Expeditions</h2>
+            </div>
+            <div className="categories-header-right">
+              <Link to="/tours" className="triply-btn-outline">
+                <span>View All Tours</span>
+                <FiArrowRight size={15} />
+              </Link>
+            </div>
+          </div>
+
+          <div className="packages-grid">
+            {featuredTours.map((t) => (
+              <div key={t.id} className="package-card">
+                <div className="package-card__img-box">
+                  <img src={t.img} alt={t.title} className="package-card__img" />
+                  <span className="package-badge">{t.badge}</span>
+                </div>
+
+                <div className="package-card__body">
+                  <div className="package-meta">
+                    <span className="package-location">
+                      <FiMapPin size={14} className="icon-orange" />
+                      {t.location}
+                    </span>
+                    <span className="package-rating">
+                      <FiStar size={14} className="icon-gold" />
+                      <strong>{t.rating}</strong> ({t.reviews})
+                    </span>
+                  </div>
+
+                  <h3 className="package-title">{t.title}</h3>
+
+                  <div className="package-footer">
+                    <div className="package-duration">
+                      <FiClock size={14} />
+                      <span>{t.duration}</span>
+                    </div>
+                    <div className="package-price">
+                      <span>From</span>
+                      <strong>{t.price}</strong>
+                    </div>
+                  </div>
+
+                  <Link to="/contact" className="btn-book-package">
+                    <span>Reserve Package</span>
+                    <FiArrowRight size={14} />
+                  </Link>
                 </div>
               </div>
             ))}
@@ -300,26 +561,25 @@ export default function Home() {
         </div>
       </section>
 
-      {/* ===== CTA BANNER ===== */}
-      <section className="home-cta">
-        <div className="home-cta__bg" />
-        <div className="home-cta__overlay" />
-        <div className="container home-cta__content">
-          <span className="section-label reveal">Start Your Journey</span>
-          <h2 className="home-cta__title reveal">
-            Ready to Experience<br />the Real Ethiopia?
-          </h2>
-          <p className="home-cta__sub reveal">
-            Speak with one of our local travel experts and let us design your dream Ethiopian adventure — completely tailored to you.
-          </p>
-          <div className="home-cta__actions reveal">
-            <Link to="/contact" className="btn btn-primary">
-              <span>Plan My Trip</span>
-              <FiArrowRight />
-            </Link>
-            <Link to="/tours" className="btn btn-outline">
-              <span>Browse All Tours</span>
-            </Link>
+      {/* ============================================================ */}
+      {/* 8. NEWSLETTER / BOOKING BANNER                              */}
+      {/* ============================================================ */}
+      <section className="triply-cta-banner">
+        <div className="container">
+          <div className="triply-cta-card">
+            <div className="cta-content">
+              <span className="section-script-subtitle" style={{ color: '#FDBA74' }}>Begin Your Journey</span>
+              <h2 className="cta-title">Ready for Your Next Great Adventure or Mission?</h2>
+              <p className="cta-subtitle">
+                Contact our local travel specialists or NGO logistics officers to structure your custom journey or fleet lease.
+              </p>
+            </div>
+            <div className="cta-action">
+              <Link to="/contact" className="triply-btn-orange" style={{ padding: '16px 36px', fontSize: '1.05rem' }}>
+                <span>Connect With Our Team</span>
+                <FiArrowRight size={18} />
+              </Link>
+            </div>
           </div>
         </div>
       </section>
