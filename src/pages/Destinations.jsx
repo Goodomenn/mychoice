@@ -1,168 +1,251 @@
-import { useEffect } from 'react'
+import { useState, useEffect } from 'react'
 import { Link } from 'react-router-dom'
-import { FiArrowRight, FiMapPin, FiClock } from 'react-icons/fi'
+import { collection, onSnapshot } from 'firebase/firestore'
+import { db } from '../firebase/config'
+import { 
+  FiArrowRight, 
+  FiMapPin, 
+  FiCalendar, 
+  FiSun, 
+  FiAward, 
+  FiCompass,
+  FiCheckCircle
+} from 'react-icons/fi'
+import { 
+  FaLandmark, 
+  FaPersonHiking, 
+  FaVolcano, 
+  FaWater, 
+  FaPaw,
+  FaMosque
+} from 'react-icons/fa6'
 import './Destinations.css'
 
-const destinations = [
+const destinationsData = [
   {
-    id: 1,
+    id: 'lalibela',
     name: 'Lalibela',
-    region: 'Northern Ethiopia',
-    tag: 'Historical · UNESCO',
-    access: '45-min flight from Addis Ababa',
-    img: 'https://images.unsplash.com/photo-1604580864964-0462f5d5b1a8?w=900&q=80',
-    desc: 'Once the medieval capital of Ethiopia, Lalibela is a UNESCO World Heritage Site and the second holiest site of Ethiopian Christianity after Axum. Lalibela is renowned for its eleven churches carved entirely from a single rock, dating to the 12th–13th centuries.',
-    highlights: ['11 Rock-Hewn Churches', 'UNESCO World Heritage', 'Major Pilgrimage Site', 'Living Medieval Architecture'],
+    region: 'Amhara Highlands',
+    altitude: '2,600m',
+    bestTime: 'Oct – Mar',
+    unesco: true,
+    tag: 'Historical Sanctuary',
+    img: 'https://images.unsplash.com/photo-1604580864964-0462f5d5b1a8?w=800&q=80',
+    icon: <FaLandmark />,
+    desc: 'Eleven monolithic medieval churches carved directly into volcanic rock in the 12th century, considered the 8th Wonder of the World.',
+    highlights: ['Church of Saint George (Bet Giyorgis)', 'Bete Medhane Alem (World\'s largest monolithic church)', 'Ancient liturgical ceremonies', 'Chanted subterranean passages']
   },
   {
-    id: 2,
-    name: 'Danakil Depression & Erta Ale',
-    region: 'Afar Region',
-    tag: 'Adventure · Geology',
-    access: '2-day expedition from Mekelle',
-    img: 'https://images.unsplash.com/photo-1589308078059-be1415eab4c3?w=900&q=80',
-    desc: 'The Erta Ale Volcano is a magical sight, especially when its lava lake glows and bubbles within the crater. The geological activity creates unique landscapes featuring vast salt deserts, hydrothermal lakes, and hot springs with striking yellow, green, and orange mineral deposits.',
-    highlights: ['Active Lava Lake', 'Salt Flat Desert', 'Colorful Hot Springs', "Earth's Lowest Land Point"],
-  },
-  {
-    id: 3,
+    id: 'simien',
     name: 'Simien Mountains',
-    region: 'Amhara Region',
-    tag: 'Adventure · UNESCO',
-    access: '1-hr drive from Gondar',
-    img: 'https://images.unsplash.com/photo-1598430772299-8a97f3d9d1d0?w=900&q=80',
-    desc: 'Formed by massive erosion over millions of years, the Simien Mountains boast jagged peaks, deep valleys, and sharp precipices plunging up to 1,500 meters. A UNESCO Natural Heritage site and refuge for the endemic gelada baboon and the rare Ethiopian wolf.',
-    highlights: ['UNESCO Natural Heritage', 'Multi-Day Trekking', 'Gelada Baboons', 'Ethiopian Wolf Sightings'],
+    region: 'North Gondar',
+    altitude: 'Up to 4,550m',
+    bestTime: 'Sep – Apr',
+    unesco: true,
+    tag: 'Alpine Wilderness',
+    img: 'https://images.unsplash.com/photo-1598430772299-8a97f3d9d1d0?w=800&q=80',
+    icon: <FaPersonHiking />,
+    desc: 'Massive jagged pinnacles and precipitous 1,500m cliffs crowned by Ras Dashen, providing sanctuary for thousands of endemic Gelada baboons.',
+    highlights: ['Dramatic escarpment panoramas', 'Gelada baboon social troops', 'Walia ibex viewing', 'Jinbar waterfall drop']
   },
   {
-    id: 4,
+    id: 'danakil',
+    name: 'Danakil Depression',
+    region: 'Afar Triangle',
+    altitude: '-125m below sea level',
+    bestTime: 'Nov – Feb',
+    unesco: false,
+    tag: 'Extreme Adventure',
+    img: 'https://images.unsplash.com/photo-1589308078059-be1415eab4c3?w=800&q=80',
+    icon: <FaVolcano />,
+    desc: 'One of Earth’s most surreal geological cauldrons — glowing bubbling lava lakes, vivid neon sulfur springs, and vast blinding salt desert plains.',
+    highlights: ['Erta Ale active lava lake', 'Dallol hydrothermal sulfuric terraces', 'Lake Karum endless salt flats', 'Camel salt trade caravans']
+  },
+  {
+    id: 'omo',
+    name: 'Omo Valley',
+    region: 'Southern Nations',
+    altitude: '500m',
+    bestTime: 'Aug – Oct / Dec – Mar',
+    unesco: true,
+    tag: 'Cultural Heritage',
+    img: 'https://images.unsplash.com/photo-1578662996442-48f60103fc96?w=800&q=80',
+    icon: <FiCompass />,
+    desc: 'A cultural crossroads sheltering indigenous pastoralist communities whose body art, rituals, and ceremonies have endured untouched for millennia.',
+    highlights: ['Mursi lip-plate traditions', 'Hamer ceremonial bull-jumping', 'Karo body-chalk ornamentation', 'Vibrant tribal barter markets']
+  },
+  {
+    id: 'bale',
     name: 'Bale Mountains',
-    region: 'Oromia Region',
-    tag: 'Wildlife · Nature',
-    access: 'Drive south from Addis Ababa',
-    img: 'https://images.unsplash.com/photo-1516426122078-c23e76319801?w=900&q=80',
-    desc: "Renowned for its biodiversity, Bale Mountains National Park covers 2,400 km² and contains Africa's largest Afro-alpine habitat. Home to the rare Ethiopian wolf, mountain nyala, and Menelik's bushbuck. The highest road in Africa crosses the stunning Sanetti Plateau.",
-    highlights: ['Rare Ethiopian Wolf', 'Africa\'s Largest Afro-Alpine', 'Sanetti Plateau', 'Mountain Nyala'],
+    region: 'Oromia',
+    altitude: '3,000m – 4,377m',
+    bestTime: 'Nov – Mar',
+    unesco: true,
+    tag: 'Wildlife Habitat',
+    img: 'https://images.unsplash.com/photo-1516426122078-c23e76319801?w=800&q=80',
+    icon: <FaPaw />,
+    desc: 'Africa’s largest Afro-alpine ecosystem and glacial lakes, home to over half of the world’s surviving wild population of Ethiopian wolves.',
+    highlights: ['Sanetti Plateau wolf sightings', 'Mountain Nyala in Dinsho', 'Enchanted Harenna Forest canopy', 'Africa\'s highest all-weather road']
   },
   {
-    id: 5,
-    name: 'Lake Tana & Monasteries',
-    region: 'Amhara Region',
-    tag: 'Cultural · Historical',
-    access: 'From Bahir Dar by boat',
-    img: 'https://images.unsplash.com/photo-1549880338-65ddcdfd017b?w=900&q=80',
-    desc: "Ethiopia's largest lake and the source of the Blue Nile River, providing about 85% of the Nile's water. Famous for its historic monasteries and churches affiliated with the Ethiopian Orthodox Church, housing remarkable treasures and artistic medieval wall paintings.",
-    highlights: ['Source of the Blue Nile', 'Island Monasteries', 'Medieval Murals', 'Excellent Birdwatching'],
-  },
-  {
-    id: 6,
-    name: 'Omo Valley Tribes',
-    region: 'Southern Ethiopia',
-    tag: 'Cultural · Tribal',
-    access: 'Multi-day from Addis Ababa',
-    img: 'https://images.unsplash.com/photo-1578662996442-48f60103fc96?w=900&q=80',
-    desc: "Home to some of the world's last isolated tribes — each with unique languages, customs, and ancient cultural practices closely tied to cattle herding. Their vibrant social life is expressed through ritual ceremonies, body scarification, intricate beadwork, and body painting.",
-    highlights: ['Mursi & Hamer Tribes', 'Body Painting Traditions', 'Cattle Jumping Ceremony', 'Traditional Markets'],
-  },
-  {
-    id: 7,
-    name: 'Gondar',
-    region: 'Amhara Region',
-    tag: 'Historical · Architecture',
-    access: 'Flight or drive from Addis',
-    img: 'https://images.unsplash.com/photo-1571406252241-db0280bd36cd?w=900&q=80',
-    desc: 'Once the capital of the Ethiopian Empire from 1632 to 1855, Gondar is famous for its royal castles and medieval churches within the royal enclosure. Often called the "Camelot of Africa," these castles are unique in sub-Saharan Africa and reflect a remarkable cultural heritage.',
-    highlights: ['Royal Castle Complex', '"Camelot of Africa"', 'Debre Birhan Selassie Church', 'Imperial Enclosure'],
-  },
-  {
-    id: 8,
-    name: 'Axum',
-    region: 'Tigray Region',
-    tag: 'Historical · Ancient',
-    access: 'Flight from Addis Ababa',
-    img: 'https://images.unsplash.com/photo-1535140728325-a4d3707eee61?w=900&q=80',
-    desc: "Heart of ancient Ethiopian civilization and one of the world's four great ancient kingdoms. Traditionally regarded as the birthplace of the Queen of Sheba. The Church of Our Lady Mary of Zion is believed to house the original Ark of the Covenant — the holiest relic in Christianity.",
-    highlights: ['Ark of the Covenant', 'Ancient Obelisks (Stelae)', "Queen of Sheba's Bath", 'Royal Tombs & Museums'],
-  },
-  {
-    id: 9,
-    name: 'Bahir Dar',
-    region: 'Amhara Region',
-    tag: 'Nature · Culture',
-    access: 'Short flight from Addis Ababa',
-    img: 'https://images.unsplash.com/photo-1509660933844-6910e12765a0?w=900&q=80',
-    desc: 'Located on the shores of Lake Tana, Bahir Dar is known for its scenic beauty and role as the gateway to the Blue Nile Falls — located just 30 km away. The spectacular falls plunge into deep gorges on their journey to Egypt, earning the name "Smoke of Fire."',
-    highlights: ['Blue Nile Falls', 'Lake Tana Gateway', 'Scenic Tree-Lined Boulevards', 'Boat Trips to Monasteries'],
-  },
+    id: 'harar',
+    name: 'Harar Jugol',
+    region: 'Eastern Harari',
+    altitude: '1,885m',
+    bestTime: 'Year-Round',
+    unesco: true,
+    tag: 'Walled Islamic City',
+    img: 'https://images.unsplash.com/photo-1513635269975-59663e0ac1ad?w=800&q=80',
+    icon: <FaMosque />,
+    desc: 'The fourth-holiest city in Islam, enclosed by 16th-century historic stone walls, labyrinthine alleyways, and the famous nightly wild hyena feeding.',
+    highlights: ['82 historic mosques and shrines', 'Traditional Harari colorful houses', 'Nighttime hyena-feeding ritual', 'Aromatic spice & coffee markets']
+  }
 ]
 
-function useScrollReveal() {
-  useEffect(() => {
-    const els = document.querySelectorAll('.reveal')
-    const observer = new IntersectionObserver(
-      entries => entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible') }),
-      { threshold: 0.1 }
-    )
-    els.forEach(el => observer.observe(el))
-    return () => observer.disconnect()
-  }, [])
-}
-
 export default function Destinations() {
-  useScrollReveal()
-  return (
-    <div className="destinations-page">
-      {/* Banner */}
-      <div className="page-banner">
-        <div className="container">
-          <span className="page-banner-label">Explore Ethiopia</span>
-          <h1 className="page-banner-title">Our Destinations</h1>
-        </div>
-      </div>
+  const [destinationsList, setDestinationsList] = useState(destinationsData)
+  const [selectedDest, setSelectedDest] = useState(null)
 
-      {/* Intro */}
-      <section className="section">
-        <div className="container dest-intro">
-          <p className="dest-intro__text reveal">
-            Ethiopia is the birthplace of humanity and home to unique tribes, ancient civilizations, abundant wildlife, majestic mountains, and stunning landscapes. Visiting Ethiopia's top attractions requires time, but these destinations are highly popular on our itineraries and consistently receive outstanding reviews from travellers around the world.
+  useEffect(() => {
+    try {
+      const unsubscribe = onSnapshot(collection(db, 'destinations'), (snapshot) => {
+        if (!snapshot.empty) {
+          const docs = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }))
+          setDestinationsList(docs)
+        }
+      }, (error) => {
+        console.warn('Firestore live listener warning, using fallback destinations:', error);
+      });
+      return () => unsubscribe();
+    } catch (e) {
+      console.warn('Firebase error:', e);
+    }
+  }, []);
+
+  return (
+    <div className="triply-page destinations-page">
+      {/* ============================================================ */}
+      {/* 1. HERO BANNER                                               */}
+      {/* ============================================================ */}
+      <section className="page-hero">
+        <div className="page-hero__bg">
+          <img 
+            src="https://images.unsplash.com/photo-1506744038136-46273834b3fb?w=1920&q=80" 
+            alt="Scenic Ethiopian landscapes" 
+            className="page-hero__img"
+          />
+          <div className="page-hero__overlay"></div>
+        </div>
+
+        <div className="container page-hero__container">
+          <div className="page-hero__breadcrumbs">
+            <Link to="/">Home</Link>
+            <span className="crumb-sep">/</span>
+            <span>Destinations</span>
+          </div>
+
+          <h1 className="page-hero__title">
+            Wonders of <span className="script-accent">ancient</span> Ethiopia
+          </h1>
+          <p className="page-hero__subtitle">
+            From volcanic hydrothermal wonders and alpine mountain escarpments to medieval rock sanctuaries. 
+            Discover the most captivating destinations across the Cradle of Civilization.
           </p>
-          <Link to="/contact" className="btn btn-primary reveal">
-            <span>Plan My Journey</span>
-            <FiArrowRight />
-          </Link>
         </div>
       </section>
 
-      {/* Destinations */}
-      <section className="section" style={{ paddingTop: 0 }}>
+      {/* ============================================================ */}
+      {/* 2. DESTINATIONS GRID WITH ARCH CARDS                         */}
+      {/* ============================================================ */}
+      <section className="dest-grid-section">
         <div className="container">
-          {destinations.map((d, i) => (
-            <div key={d.id} className={`dest-detail reveal ${i % 2 !== 0 ? 'dest-detail--reverse' : ''}`}>
-              <div className="dest-detail__image-wrap">
-                <img src={d.img} alt={d.name} className="dest-detail__img" loading="lazy" />
-                <div className="dest-detail__tag">{d.tag}</div>
-              </div>
-              <div className="dest-detail__content">
-                <span className="section-label">{d.region}</span>
-                <span className="gold-divider" />
-                <h2 className="dest-detail__title">{d.name}</h2>
-                <p className="dest-detail__desc">{d.desc}</p>
-                <div className="dest-detail__access">
-                  <FiMapPin size={14} />
-                  <span>{d.access}</span>
+          <div className="section-header-centered">
+            <span className="section-script-subtitle">Explore by Region</span>
+            <h2 className="section-main-heading">Iconic Ethiopian Destinations</h2>
+            <p className="section-lead-text">
+              Each destination offers unique ecological biodiversity, timeless architecture, and rich traditions.
+            </p>
+          </div>
+
+          <div className="dest-cards-grid">
+            {destinationsList.map((dest) => (
+              <div key={dest.id} className="dest-arch-card">
+                <div className="dest-arch-img-wrap">
+                  <img src={dest.img} alt={dest.name} className="dest-arch-img" />
+                  {dest.unesco && (
+                    <span className="unesco-badge">
+                      <FiAward size={12} />
+                      UNESCO
+                    </span>
+                  )}
+                  <div className="dest-icon-badge">
+                    {dest.icon}
+                  </div>
                 </div>
-                <ul className="dest-detail__highlights">
-                  {d.highlights.map(h => (
-                    <li key={h}><span className="dest-highlight-dot" />{h}</li>
-                  ))}
-                </ul>
-                <Link to="/tours" className="btn btn-gold-outline">
-                  <span>See Tours to {d.name.split(' ')[0]}</span>
-                  <FiArrowRight />
-                </Link>
+
+                <div className="dest-card-content">
+                  <span className="dest-tag">{dest.tag}</span>
+                  <h3 className="dest-name">{dest.name}</h3>
+                  <p className="dest-desc">{dest.desc}</p>
+
+                  <div className="dest-meta-strip">
+                    <div className="d-meta-item">
+                      <FiMapPin size={13} className="icon-orange" />
+                      <span>{dest.region}</span>
+                    </div>
+                    <div className="d-meta-item">
+                      <FiSun size={13} className="icon-gold" />
+                      <span>Best: {dest.bestTime}</span>
+                    </div>
+                  </div>
+
+                  <div className="dest-highlights-box">
+                    <strong className="hl-title">Must-Experience Highlights:</strong>
+                    <ul className="hl-list">
+                      {(Array.isArray(dest.highlights) ? dest.highlights : []).slice(0, 3).map((h, idx) => (
+                        <li key={idx}>
+                          <FiCheckCircle size={13} className="icon-green" />
+                          <span>{h}</span>
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+
+                  <div className="dest-card-footer">
+                    <Link 
+                      to={`/tours`}
+                      className="btn-explore-tours"
+                    >
+                      <span>Explore Tours in {dest.name}</span>
+                      <FiArrowRight size={15} />
+                    </Link>
+                  </div>
+                </div>
               </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* ============================================================ */}
+      {/* 3. TAILOR-MADE ADVICE CALLOUT                                */}
+      {/* ============================================================ */}
+      <section className="dest-callout-section">
+        <div className="container">
+          <div className="dest-callout-card">
+            <div>
+              <span className="section-script-subtitle" style={{ color: '#FDBA74' }}>Personalized Itineraries</span>
+              <h3 className="callout-heading">Can't Decide Which Region to Visit?</h3>
+              <p className="callout-text">
+                Our local travel designers can combine the Simien mountains, Lalibela rock churches, and 
+                Omo Valley tribal cultures into one seamless private journey.
+              </p>
             </div>
-          ))}
+            <Link to="/contact" className="triply-btn-orange" style={{ padding: '14px 32px' }}>
+              <span>Consult a Local Specialist</span>
+              <FiArrowRight size={16} />
+            </Link>
+          </div>
         </div>
       </section>
     </div>

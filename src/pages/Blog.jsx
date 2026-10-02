@@ -1,119 +1,270 @@
-import { useEffect } from 'react'
+import { useState } from 'react'
 import { Link } from 'react-router-dom'
-import { FiArrowRight, FiCalendar, FiTag } from 'react-icons/fi'
+import { 
+  FiArrowRight, 
+  FiClock, 
+  FiCalendar, 
+  FiUser, 
+  FiTag, 
+  FiBookmark,
+  FiSend
+} from 'react-icons/fi'
 import './Blog.css'
 
-const posts = [
+const categories = ['All Articles', 'Travel Guides', 'Culture & History', 'Adventure & Trekking', 'Photography Tips']
+
+const articles = [
   {
-    id: 1, category: 'Travel Tips', date: 'September 5, 2026',
-    title: 'Ethiopia Travel Tips & Essential Facts for First-Time Visitors',
-    excerpt: 'From visa requirements to the best time to visit, currency, health precautions, and cultural etiquette — everything a first-time traveller needs to know before arriving in Ethiopia.',
-    img: 'https://images.unsplash.com/photo-1604580864964-0462f5d5b1a8?w=700&q=80',
+    id: 1,
+    category: 'Culture & History',
+    title: 'A Spiritual Journey to Lalibela: Experiencing the Living Jerusalem of Africa',
+    excerpt: 'Deep underground in the Ethiopian highlands, eleven 12th-century medieval churches carved from solid basalt rock continue to echo with chants from ancient Ge\'ez liturgy.',
+    date: 'Sep 15, 2026',
     readTime: '6 min read',
+    author: 'Yohannes Bekele',
+    img: 'https://images.unsplash.com/photo-1604580864964-0462f5d5b1a8?w=800&q=80',
+    featured: true
   },
   {
-    id: 2, category: 'Destinations', date: 'August 18, 2026',
-    title: 'Lalibela: The Jerusalem of Africa You Must See to Believe',
-    excerpt: 'Carved from solid rock in the 12th century, Lalibela\'s 11 monolithic churches remain an active pilgrimage site. We explore what makes this UNESCO site so extraordinary.',
-    img: 'https://images.unsplash.com/photo-1578662996442-48f60103fc96?w=700&q=80',
+    id: 2,
+    category: 'Adventure & Trekking',
+    title: 'Danakil Depression Expedition: Preparing for Earth’s Most Surreal Cauldron',
+    excerpt: 'From active bubbling lava lakes at Erta Ale to blinding salt desert flats and neon-green sulfur hydrothermal springs, here is everything you need to know before visiting.',
+    date: 'Aug 28, 2026',
     readTime: '8 min read',
+    author: 'Sara Lindqvist',
+    img: 'https://images.unsplash.com/photo-1589308078059-be1415eab4c3?w=800&q=80',
+    featured: false
   },
   {
-    id: 3, category: 'Adventure', date: 'July 30, 2026',
-    title: "Inside the Danakil Depression: Earth's Most Extreme Landscape",
-    excerpt: "We joined an expedition to the Danakil — one of the planet's hottest, lowest, and most geologically active places. Here's what it's really like to stand next to an open lava lake.",
-    img: 'https://images.unsplash.com/photo-1589308078059-be1415eab4c3?w=700&q=80',
-    readTime: '10 min read',
-  },
-  {
-    id: 4, category: 'Culture', date: 'July 12, 2026',
-    title: 'The Tribes of the Omo Valley: A Journey Into Living Traditions',
-    excerpt: 'The Lower Omo Valley is home to some of the most culturally distinctive people on the planet. A respectful, immersive visit here is one of the most humbling experiences in travel.',
-    img: 'https://images.unsplash.com/photo-1516426122078-c23e76319801?w=700&q=80',
-    readTime: '9 min read',
-  },
-  {
-    id: 5, category: 'Festivals', date: 'June 20, 2026',
-    title: "Timkat Festival: Ethiopia's Spectacular Epiphany Celebration",
-    excerpt: 'Timkat is Ethiopia\'s most colourful religious celebration — a three-day explosion of faith, processions, music, and sacred ceremony that takes place every January across the country.',
-    img: 'https://images.unsplash.com/photo-1535140728325-a4d3707eee61?w=700&q=80',
+    id: 3,
+    category: 'Culture & History',
+    title: 'The Living Traditions of the Lower Omo Valley: Etiquette & Ethical Tourism',
+    excerpt: 'How to experience the timeless rituals and body ornamentation of the Mursi, Hamer, and Karo communities while fostering mutual dignity and cultural preservation.',
+    date: 'Aug 14, 2026',
     readTime: '7 min read',
+    author: 'Marcus Vance',
+    img: 'https://images.unsplash.com/photo-1578662996442-48f60103fc96?w=800&q=80',
+    featured: false
   },
   {
-    id: 6, category: 'Wildlife', date: 'May 28, 2026',
-    title: 'Tracking the Ethiopian Wolf: The World\'s Rarest Canid',
-    excerpt: 'With fewer than 500 individuals left, the Ethiopian wolf is critically endangered. The Bale Mountains offer one of the best chances to see this remarkable creature in the wild.',
-    img: 'https://images.unsplash.com/photo-1549880338-65ddcdfd017b?w=700&q=80',
+    id: 4,
+    category: 'Adventure & Trekking',
+    title: 'Trekking Among Thousands of Gelada Baboons in the Simien Mountains',
+    excerpt: 'Ascending Ras Dashen across 1,500m precipices. Why the Simien Mountains National Park is Africa’s premier Afro-alpine trekking paradise.',
+    date: 'Jul 30, 2026',
     readTime: '5 min read',
+    author: 'Yohannes Bekele',
+    img: 'https://images.unsplash.com/photo-1598430772299-8a97f3d9d1d0?w=800&q=80',
+    featured: false
   },
+  {
+    id: 5,
+    category: 'Travel Guides',
+    title: 'The Origin of Coffee: An Aromatic Pilgrimage to Ethiopia’s Wild Cloud Forests',
+    excerpt: 'Trace the legendary tale of Kaldi the goatherd and discover the sacred Buna coffee ceremony practiced daily across Ethiopian households.',
+    date: 'Jul 12, 2026',
+    readTime: '5 min read',
+    author: 'Elena Rossi',
+    img: 'https://images.unsplash.com/photo-1514432324607-a09d9b4aefdd?w=800&q=80',
+    featured: false
+  },
+  {
+    id: 6,
+    category: 'Culture & History',
+    title: 'Midnight in Harar: Feeding Wild Hyenas Outside the 16th-Century Walled City',
+    excerpt: 'Step into the fourth-holiest city of Islam, navigate 82 mosques through narrow stone alleys, and witness the legendary hyena men bonding with apex predators.',
+    date: 'Jun 22, 2026',
+    readTime: '6 min read',
+    author: 'Sara Lindqvist',
+    img: 'https://images.unsplash.com/photo-1513635269975-59663e0ac1ad?w=800&q=80',
+    featured: false
+  }
 ]
 
-function useScrollReveal() {
-  useEffect(() => {
-    const els = document.querySelectorAll('.reveal')
-    const observer = new IntersectionObserver(
-      entries => entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible') }),
-      { threshold: 0.1 }
-    )
-    els.forEach(el => observer.observe(el))
-    return () => observer.disconnect()
-  }, [])
-}
-
 export default function Blog() {
-  useScrollReveal()
-  const [featured, ...rest] = posts
+  const [activeCategory, setActiveCategory] = useState('All Articles')
+  const [email, setEmail] = useState('')
+  const [subscribed, setSubscribed] = useState(false)
+
+  const featuredArticle = articles.find(a => a.featured)
+  const regularArticles = articles.filter(a => {
+    const matchCat = activeCategory === 'All Articles' || a.category === activeCategory
+    return matchCat && !a.featured
+  })
+
+  const handleSubscribe = (e) => {
+    e.preventDefault()
+    setSubscribed(true)
+  }
 
   return (
-    <div className="blog-page">
-      <div className="page-banner">
-        <div className="container">
-          <span className="page-banner-label">Travel Stories</span>
-          <h1 className="page-banner-title">From the Field</h1>
+    <div className="triply-page blog-page">
+      {/* ============================================================ */}
+      {/* 1. HERO BANNER                                               */}
+      {/* ============================================================ */}
+      <section className="page-hero">
+        <div className="page-hero__bg">
+          <img 
+            src="https://images.unsplash.com/photo-1519681393784-d120267933ba?w=1920&q=80" 
+            alt="Travel writer overlooking mountain vista" 
+            className="page-hero__img"
+          />
+          <div className="page-hero__overlay"></div>
         </div>
-      </div>
 
-      <section className="section">
-        <div className="container">
-          {/* Featured Post */}
-          <div className="blog-featured reveal">
-            <div className="blog-featured__img-wrap">
-              <img src={featured.img} alt={featured.title} className="blog-featured__img" loading="lazy" />
-              <span className="blog-cat-tag">{featured.category}</span>
-            </div>
-            <div className="blog-featured__content">
-              <div className="blog-meta">
-                <span><FiCalendar size={13} /> {featured.date}</span>
-                <span>· {featured.readTime}</span>
-              </div>
-              <h2 className="blog-featured__title">{featured.title}</h2>
-              <p className="blog-featured__excerpt">{featured.excerpt}</p>
-              <Link to="#" className="btn btn-gold-outline">
-                <span>Read Article</span>
-                <FiArrowRight />
-              </Link>
-            </div>
+        <div className="container page-hero__container">
+          <div className="page-hero__breadcrumbs">
+            <Link to="/">Home</Link>
+            <span className="crumb-sep">/</span>
+            <span>Blog</span>
           </div>
 
-          {/* Blog Grid */}
-          <div className="blog-grid">
-            {rest.map(p => (
-              <Link to="#" key={p.id} className="blog-card reveal">
-                <div className="blog-card__img-wrap">
-                  <img src={p.img} alt={p.title} className="blog-card__img" loading="lazy" />
-                  <span className="blog-cat-tag">{p.category}</span>
+          <h1 className="page-hero__title">
+            Travel Stories & <span className="script-accent">local</span> Insights
+          </h1>
+          <p className="page-hero__subtitle">
+            Authentic travel narratives, cultural etiquette, packing guides, and insider knowledge 
+            written by our senior expedition leaders.
+          </p>
+        </div>
+      </section>
+
+      {/* ============================================================ */}
+      {/* 2. FEATURED STORY HERO                                       */}
+      {/* ============================================================ */}
+      {featuredArticle && (
+        <section className="blog-featured-section">
+          <div className="container">
+            <div className="featured-story-card">
+              <div className="featured-story-img-box">
+                <img src={featuredArticle.img} alt={featuredArticle.title} className="featured-story-img" />
+                <span className="featured-pill">FEATURED STORY</span>
+              </div>
+
+              <div className="featured-story-body">
+                <div className="featured-meta">
+                  <span className="featured-cat">{featuredArticle.category}</span>
+                  <span className="meta-dot">&bull;</span>
+                  <span className="featured-time">{featuredArticle.readTime}</span>
                 </div>
-                <div className="blog-card__body">
-                  <div className="blog-meta">
-                    <span><FiCalendar size={12} /> {p.date}</span>
-                    <span>· {p.readTime}</span>
+
+                <h2 className="featured-story-title">{featuredArticle.title}</h2>
+                <p className="featured-story-excerpt">{featuredArticle.excerpt}</p>
+
+                <div className="featured-story-footer">
+                  <div className="author-wrap">
+                    <div className="author-avatar">{featuredArticle.author.charAt(0)}</div>
+                    <div>
+                      <strong className="author-name">{featuredArticle.author}</strong>
+                      <span className="author-date">{featuredArticle.date}</span>
+                    </div>
                   </div>
-                  <h3 className="blog-card__title">{p.title}</h3>
-                  <p className="blog-card__excerpt">{p.excerpt}</p>
-                  <span className="blog-card__cta">Read More <FiArrowRight size={13} /></span>
+
+                  <Link to="/contact" className="triply-btn-orange" style={{ padding: '10px 22px', fontSize: '0.88rem' }}>
+                    <span>Read Article</span>
+                    <FiArrowRight size={14} />
+                  </Link>
                 </div>
-              </Link>
+              </div>
+            </div>
+          </div>
+        </section>
+      )}
+
+      {/* ============================================================ */}
+      {/* 3. CATEGORIES & ARTICLE GRID                                 */}
+      {/* ============================================================ */}
+      <section className="blog-grid-section">
+        <div className="container">
+          {/* Category Filter Tabs */}
+          <div className="blog-categories-strip">
+            {categories.map((cat) => (
+              <button
+                key={cat}
+                className={`blog-cat-btn ${activeCategory === cat ? 'active' : ''}`}
+                onClick={() => setActiveCategory(cat)}
+              >
+                {cat}
+              </button>
             ))}
+          </div>
+
+          {/* Articles Grid */}
+          <div className="blog-articles-grid">
+            {regularArticles.map((art) => (
+              <article key={art.id} className="article-card">
+                <div className="article-img-box">
+                  <img src={art.img} alt={art.title} className="article-img" />
+                  <span className="article-category-badge">{art.category}</span>
+                </div>
+
+                <div className="article-body">
+                  <div className="article-meta">
+                    <span className="article-date">
+                      <FiCalendar size={13} className="icon-orange" />
+                      {art.date}
+                    </span>
+                    <span className="article-read">
+                      <FiClock size={13} className="icon-orange" />
+                      {art.readTime}
+                    </span>
+                  </div>
+
+                  <h3 className="article-title">{art.title}</h3>
+                  <p className="article-excerpt">{art.excerpt}</p>
+
+                  <div className="article-footer">
+                    <span className="article-author">By {art.author}</span>
+                    <Link to="/contact" className="article-link">
+                      <span>Read More</span>
+                      <FiArrowRight size={14} />
+                    </Link>
+                  </div>
+                </div>
+              </article>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* ============================================================ */}
+      {/* 4. NEWSLETTER SUBSCRIPTION CARD                              */}
+      {/* ============================================================ */}
+      <section className="blog-newsletter-section">
+        <div className="container">
+          <div className="newsletter-card">
+            <div className="newsletter-text">
+              <span className="section-script-subtitle" style={{ color: '#FDBA74' }}>Stay Inspired</span>
+              <h3 className="newsletter-heading">Receive Handcrafted Itineraries & Stories</h3>
+              <p className="newsletter-desc">
+                Subscribe to our monthly travel dispatch featuring off-the-beaten-path expeditions and cultural deep dives.
+              </p>
+            </div>
+
+            <div className="newsletter-form-box">
+              {subscribed ? (
+                <div className="newsletter-success">
+                  <strong>Thank you for subscribing!</strong>
+                  <span>Check your inbox for our latest expedition dispatches.</span>
+                </div>
+              ) : (
+                <form onSubmit={handleSubscribe} className="newsletter-form">
+                  <input 
+                    type="email"
+                    required
+                    placeholder="Enter your email address..."
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
+                    className="newsletter-input"
+                  />
+                  <button type="submit" className="triply-btn-orange newsletter-btn">
+                    <span>Subscribe</span>
+                    <FiSend size={15} />
+                  </button>
+                </form>
+              )}
+            </div>
           </div>
         </div>
       </section>

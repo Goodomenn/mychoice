@@ -8,7 +8,6 @@ import {
   FiCalendar, 
   FiClock, 
   FiCheckCircle, 
-  FiShield, 
   FiAward, 
   FiMap,
   FiTruck,
@@ -33,45 +32,40 @@ const categories = [
   {
     id: 1,
     title: 'City Tours',
-    count: '5 Tours',
-    price: '$550',
-    img: '/images/city.jpg',
+    price: '550 Birr',
+    img: '/category-cards/cat-1-city-tours.jpg',
     icon: <FaSignHanging />,
     link: '/destinations'
   },
   {
     id: 2,
     title: 'Museum Tours',
-    count: '5 Tours',
-    price: '$450',
-    img: '/images/museum.png',
+    price: '450 Birr',
+    img: '/category-cards/cat-2-museum-tours.jpg',
     icon: <FaLandmark />,
     link: '/destinations'
   },
   {
     id: 3,
     title: 'Beaches & Lakes',
-    count: '10 Tours',
-    price: '$100',
-    img: '/images/lakes.png',
+    price: '100 Birr',
+    img: '/category-cards/cat-3-beaches-lakes.png',
     icon: <FaWater />,
     link: '/destinations'
   },
   {
     id: 4,
     title: 'Hiking',
-    count: '4 Tours',
-    price: '$250',
-    img: 'https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?w=600&q=80',
+    price: '250 Birr',
+    img: '/category-cards/cat-4-hiking.jpg',
     icon: <FaPersonHiking />,
     link: '/tours'
   },
   {
     id: 5,
     title: 'Cruises & Boats',
-    count: '8 Tours',
-    price: '$100',
-    img: 'https://images.unsplash.com/photo-1548574505-5e239809ee19?w=600&q=80',
+    price: '100 Birr',
+    img: '/category-cards/cat-5-cruises-boats.png',
     icon: <FaShip />,
     link: '/tours'
   }
@@ -84,7 +78,7 @@ const featuredTours = [
     title: 'Historic Lalibela Rock-Hewn Churches',
     duration: '4 Days / 3 Nights',
     location: 'Lalibela, Amhara',
-    price: '$680',
+    price: '680 Birr',
     rating: 4.9,
     reviews: 48,
     badge: 'Popular',
@@ -95,7 +89,7 @@ const featuredTours = [
     title: 'Simien Mountains Roof of Africa Trek',
     duration: '5 Days / 4 Nights',
     location: 'Simien National Park',
-    price: '$790',
+    price: '790 Birr',
     rating: 5.0,
     reviews: 32,
     badge: 'Adventure',
@@ -106,7 +100,7 @@ const featuredTours = [
     title: 'Danakil Depression & Erta Ale Volcano',
     duration: '3 Days / 2 Nights',
     location: 'Afar Triangle',
-    price: '$620',
+    price: '620 Birr',
     rating: 4.9,
     reviews: 29,
     badge: 'Expedition',
@@ -396,8 +390,6 @@ export default function Home() {
                 <div className="arch-card__info">
                   <h3 className="arch-card__title">{cat.title}</h3>
                   <div className="arch-card__meta">
-                    <span className="arch-card__count">{cat.count}</span>
-                    <span className="arch-card__dot">-</span>
                     <span className="arch-card__price">From <strong>{cat.price}</strong></span>
                   </div>
                 </div>
@@ -408,39 +400,7 @@ export default function Home() {
       </section>
 
       {/* ============================================================ */}
-      {/* 5. INSTITUTIONAL TRUST & VENDOR COMPLIANCE STRIP             */}
-      {/* ============================================================ */}
-      <section className="triply-trust-strip">
-        <div className="container">
-          <div className="trust-strip-inner">
-            <div className="trust-info">
-              <div className="trust-badge">
-                <FiShield className="trust-icon" />
-                <span>OFFICIAL ETHIOPIAN VENDOR ENTITY</span>
-              </div>
-              <h3 className="trust-heading">Engineered for Institutional Reliability</h3>
-              <p className="trust-text">
-                Fully compliant under Business License <strong>14/666/128419/2005</strong>, VAT <strong>80692</strong>, 
-                and verified SIGTAS tax status. We provide standardized 30-day post-paid credit facilities, 
-                logbook tracking, and dedicated operations coordinators in Addis Ababa, Semera, and Mekelle.
-              </p>
-            </div>
-            <div className="trust-actions">
-              <Link to="/contact" className="triply-btn-orange">
-                <span>Plan Your Journey</span>
-                <FiArrowRight size={16} />
-              </Link>
-              <Link to="/governance" className="trust-link-secondary">
-                <span>Governance Policies</span>
-                <FiArrowRight size={14} />
-              </Link>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* ============================================================ */}
-      {/* 6. MAKE IT MEMORABLE / WE CREATE THE TRIPS YOU LOVE          */}
+      {/* 5. MAKE IT MEMORABLE / WE CREATE THE TRIPS YOU LOVE          */}
       {/* ============================================================ */}
       <section className="triply-section triply-features-section">
         <div className="container">

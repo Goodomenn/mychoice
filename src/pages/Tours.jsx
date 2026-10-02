@@ -1,5 +1,7 @@
-import { useState, useMemo } from 'react'
+import { useState, useMemo, useEffect } from 'react'
 import { Link } from 'react-router-dom'
+import { collection, onSnapshot } from 'firebase/firestore'
+import { db } from '../firebase/config'
 import { 
   FiArrowRight, 
   FiClock, 
@@ -14,7 +16,7 @@ import {
 } from 'react-icons/fi'
 import './Tours.css'
 
-const categories = ['All', 'Historical', 'Cultural', 'Adventure', 'Wildlife', 'City Tours', 'Beaches & Lakes', 'Museums', 'Combination']
+const categories = ['All', 'Historical', 'Cultural', 'Adventure', 'Wildlife', 'Combination']
 
 const toursData = [
   {
@@ -24,7 +26,7 @@ const toursData = [
     duration: '8 Days / 7 Nights',
     groupSize: 'Max 8',
     difficulty: 'Moderate',
-    price: '$1,850',
+    price: '1,850 Birr',
     rating: 4.9,
     reviews: 54,
     badge: 'Best Seller',
@@ -40,7 +42,7 @@ const toursData = [
     duration: '10 Days / 9 Nights',
     groupSize: 'Max 6',
     difficulty: 'Comfortable',
-    price: '$2,200',
+    price: '2,200 Birr',
     rating: 5.0,
     reviews: 38,
     badge: 'Exclusive',
@@ -56,7 +58,7 @@ const toursData = [
     duration: '4 Days / 3 Nights',
     groupSize: 'Max 8',
     difficulty: 'Challenging',
-    price: '$980',
+    price: '980 Birr',
     rating: 4.9,
     reviews: 62,
     badge: 'Top Expedition',
@@ -72,7 +74,7 @@ const toursData = [
     duration: '7 Days / 6 Nights',
     groupSize: 'Max 10',
     difficulty: 'Moderate–Hard',
-    price: '$1,350',
+    price: '1,350 Birr',
     rating: 5.0,
     reviews: 44,
     badge: 'Popular',
@@ -88,7 +90,7 @@ const toursData = [
     duration: '5 Days / 4 Nights',
     groupSize: 'Max 8',
     difficulty: 'Comfortable',
-    price: '$1,100',
+    price: '1,100 Birr',
     rating: 4.8,
     reviews: 29,
     badge: 'Wildlife',
@@ -98,61 +100,13 @@ const toursData = [
     desc: 'Explore Africa’s largest Afro-alpine ecosystem and search for the world’s rarest canid across misty volcanic plateau landscapes.'
   },
   {
-    id: 7,
-    category: 'Beaches & Lakes',
-    name: 'Ethiopian Rift Valley Lakes Escape',
-    duration: '6 Days / 5 Nights',
-    groupSize: 'Max 8',
-    difficulty: 'Relaxing',
-    price: ',200',
-    rating: 4.9,
-    reviews: 24,
-    badge: 'Nature',
-    location: 'Wenchi Crater, Langano, Hawassa',
-    img: '/images/lakes.png',
-    highlights: ['Lake Wenchi Crater', 'Langano Sandy Beaches', 'Hawassa Hippo Spotting', 'Boat Safaris'],
-    desc: 'Unwind along the beautiful Rift Valley lakes and crater lakes. Enjoy swimming, boat safaris, and stunning lakeside sunsets.'
-  },
-  {
-    id: 8,
-    category: 'Museums',
-    name: 'Ethiopian Heritage & National Museums Tour',
-    duration: '2 Days / 1 Night',
-    groupSize: 'Max 12',
-    difficulty: 'Easy',
-    price: '',
-    rating: 4.8,
-    reviews: 89,
-    badge: 'History',
-    location: 'Addis Ababa',
-    img: '/images/museum.png',
-    highlights: ['National Museum of Ethiopia', 'Lucy Fossil Exhibit', 'Ethnological Museum', 'Entoto Palace'],
-    desc: 'Dive into the deep history of Ethiopia and humanity itself. Witness the famous fossil Lucy and explore rich royal artifacts.'
-  },
-  {
-    id: 9,
-    category: 'City Tours',
-    name: 'Addis Ababa Vibrant City Tour',
-    duration: '1 Day / 1 Night',
-    groupSize: 'Max 10',
-    difficulty: 'Easy',
-    price: '',
-    rating: 4.7,
-    reviews: 112,
-    badge: 'City Vibe',
-    location: 'Addis Ababa',
-    img: '/images/city.jpg',
-    highlights: ['Meskel Square Views', 'Cultural Coffee Ceremony', 'Merkato Bustle', 'Jazz & Traditional Music'],
-    desc: 'Experience the diplomatic capital of Africa. From massive open-air markets to stunning nighttime cityscapes and lively jazz.'
-  },
-  {
     id: 6,
     category: 'Combination',
     name: 'Best of Ethiopia Grand Overland Circuit',
     duration: '14 Days / 13 Nights',
     groupSize: 'Max 8',
     difficulty: 'Moderate',
-    price: '$3,450',
+    price: '3,450 Birr',
     rating: 5.0,
     reviews: 21,
     badge: 'Grand Tour',
@@ -164,19 +118,36 @@ const toursData = [
 ]
 
 export default function Tours() {
+  const [toursList, setToursList] = useState(toursData)
   const [selectedCategory, setSelectedCategory] = useState('All')
   const [searchQuery, setSearchQuery] = useState('')
   const [activeTourModal, setActiveTourModal] = useState(null)
 
+  useEffect(() => {
+    try {
+      const unsubscribe = onSnapshot(collection(db, 'tours'), (snapshot) => {
+        if (!snapshot.empty) {
+          const docs = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }))
+          setToursList(docs)
+        }
+      }, (error) => {
+        console.warn('Firestore live listener warning, using fallback tours:', error);
+      });
+      return () => unsubscribe();
+    } catch (e) {
+      console.warn('Firebase error:', e);
+    }
+  }, []);
+
   const filteredTours = useMemo(() => {
-    return toursData.filter(tour => {
+    return toursList.filter(tour => {
       const matchCat = selectedCategory === 'All' || tour.category === selectedCategory
-      const matchSearch = tour.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-                          tour.location.toLowerCase().includes(searchQuery.toLowerCase()) ||
-                          tour.desc.toLowerCase().includes(searchQuery.toLowerCase())
+      const matchSearch = (tour.name || '').toLowerCase().includes(searchQuery.toLowerCase()) ||
+                          (tour.location || '').toLowerCase().includes(searchQuery.toLowerCase()) ||
+                          (tour.desc || '').toLowerCase().includes(searchQuery.toLowerCase())
       return matchCat && matchSearch
     })
-  }, [selectedCategory, searchQuery])
+  }, [toursList, selectedCategory, searchQuery])
 
   return (
     <div className="triply-page tours-page">
@@ -417,4 +388,3 @@ export default function Tours() {
     </div>
   )
 }
-

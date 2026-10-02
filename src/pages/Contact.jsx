@@ -1,162 +1,510 @@
 import { useState, useEffect } from 'react'
-import { FiPhone, FiMail, FiMapPin, FiClock, FiSend, FiCheckCircle } from 'react-icons/fi'
-import { FiInstagram, FiFacebook } from 'react-icons/fi'
+import { Link, useSearchParams } from 'react-router-dom'
+import { 
+  FiPhone, 
+  FiMail, 
+  FiMapPin, 
+  FiClock, 
+  FiSend, 
+  FiCheckCircle, 
+  FiHelpCircle,
+  FiChevronDown,
+  FiShield,
+  FiLock,
+  FiTruck,
+  FiCompass
+} from 'react-icons/fi'
+import { FaWhatsapp, FaAward, FaShieldHeart } from 'react-icons/fa6'
 import './Contact.css'
 
-export default function Contact() {
-  const [form, setForm] = useState({ name: '', email: '', phone: '', date: '', message: '' })
-  const [submitted, setSubmitted] = useState(false)
-  const [loading, setLoading] = useState(false)
-
-  const handleChange = e => setForm({ ...form, [e.target.name]: e.target.value })
-
-  const handleSubmit = async e => {
-    e.preventDefault()
-    setLoading(true)
-    // Simulate API call to backend
-    await fetch('http://localhost:5000/api/contact', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(form),
-    }).catch(() => {})
-    setTimeout(() => {
-      setLoading(false)
-      setSubmitted(true)
-    }, 1200)
+const regionalBranches = [
+  {
+    city: 'Addis Ababa (Headquarters)',
+    sub: 'Central Command, Nationwide Tenders & VIP Logistics',
+    address: 'Bole Airport Road, Around Skylight Hotel Area, Addis Ababa, Ethiopia',
+    phone: '+251 911 420 000 / +251 116 183 163',
+    email: 'info@mychoiceethiopia.com',
+    hours: 'Mon – Sat: 08:00 – 18:30 EAT',
+    lead: 'Head of Operations & International Tenders'
+  },
+  {
+    city: 'Semera Branch (Afar Gateway)',
+    sub: 'Danakil Depression & Desert Staging Hub',
+    address: 'Afar Regional Hub, Semera Logistics Corridor',
+    phone: 'Field Operations Direct Desk',
+    email: 'semera@mychoiceethiopia.com',
+    hours: '24/7 Field Dispatch & Convoy Staging',
+    lead: 'Regional Afar Logistics Coordinator'
+  },
+  {
+    city: 'Mekelle Branch (Tigray Hub)',
+    sub: 'Northern Humanitarian & Expedition Depot',
+    address: 'Kedamay Woyane Sub City, Mekelle, Tigray, Ethiopia',
+    phone: 'Northern Logistics Operations Line',
+    email: 'mekelle@mychoiceethiopia.com',
+    hours: 'Mon – Sat: 08:30 – 18:00 EAT',
+    lead: 'Regional Northern Operations Officer'
   }
+]
+
+const operationalPersonnel = [
+  {
+    role: 'Vice Manager (Tour Operations & B2C Expeditions)',
+    desk: 'Oversees customized private departures, boutique heritage lodges, Danakil expeditions, and cultural guides.',
+    contact: 'travel@mychoiceethiopia.com'
+  },
+  {
+    role: 'Commercial Operations Officer (Group & Institutional Travel)',
+    desk: 'Manages delegation transport, private group charters, and customized organizational travel arrangements across Ethiopia.',
+    contact: 'logistics@mychoiceethiopia.com'
+  },
+  {
+    role: 'Ethics & Compliance Officer (Whistleblower & Regulatory Desk)',
+    desk: 'Confidential reporting channel for anti-bribery oversight, human rights verification, and vendor audit dossiers.',
+    contact: 'compliance@mychoiceethiopia.com'
+  }
+]
+
+const faqs = [
+  {
+    q: 'How does your 30-day post-paid credit facility operate for institutional clients?',
+    a: 'For verified UN agencies, international NGOs, and diplomatic missions, we extend a formal 30-day post-paid credit facility. Mission logs and timesheets are validated weekly/monthly by your field officer, followed by a consolidated electronic VAT invoice (VAT #80692) payable via bank wire within 30 days.'
+  },
+  {
+    q: 'Are your 17 drivers certified for rough terrain and remote field missions?',
+    a: 'Yes. All 17 assigned chauffeurs hold Grade-8 and above commercial driving licenses, speak English, Amharic, and local regional dialects, and possess mandatory training in defensive driving, vehicle rollover prevention, off-road recovery, and first-aid trauma management.'
+  },
+  {
+    q: 'How far in advance should leisure travelers book custom Ethiopian tours?',
+    a: 'For major religious festivals (e.g., Timkat in January or Genna in Lalibela) and peak dry-season trekking (October through March), we recommend booking 2 to 4 months in advance to ensure premier boutique accommodations and private domestic flight charters.'
+  },
+  {
+    q: 'Why are bank account details excluded from your public website?',
+    a: 'In adherence to international cybersecurity standards and institutional anti-fraud policies, we exclude banking routing details from public-facing portals. Official Commercial Bank of Ethiopia (CBE) banking coordinates are securely transmitted alongside formal stamped service agreements.'
+  }
+]
+
+export default function Contact() {
+  const [searchParams] = useSearchParams()
+  const initialTour = searchParams.get('tour') || ''
+
+  const [inquiryType, setInquiryType] = useState('b2c') // 'b2c' | 'b2b'
+
+  const [formData, setFormData] = useState({
+    name: '',
+    organization: '',
+    email: '',
+    phone: '',
+    destination: initialTour || 'Northern Historic Circuit (Lalibela & Gondar)',
+    vehicleType: 'Toyota Land Cruiser 4x4 Hardtop',
+    operatingHub: 'Addis Ababa HQ',
+    travelers: '2 Travelers',
+    travelDate: '',
+    message: ''
+  })
+
+  const [submitted, setSubmitted] = useState(false)
+  const [openFaq, setOpenFaq] = useState(0)
 
   useEffect(() => {
-    const els = document.querySelectorAll('.reveal')
-    const observer = new IntersectionObserver(
-      entries => entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible') }),
-      { threshold: 0.1 }
-    )
-    els.forEach(el => observer.observe(el))
-    return () => observer.disconnect()
-  }, [])
+    if (initialTour) {
+      setFormData(prev => ({ ...prev, destination: initialTour }))
+    }
+  }, [initialTour])
+
+  const handleSubmit = (e) => {
+    e.preventDefault()
+    setSubmitted(true)
+  }
 
   return (
-    <div className="contact-page">
-      <div className="page-banner">
-        <div className="container">
-          <span className="page-banner-label">Get In Touch</span>
-          <h1 className="page-banner-title">Contact Us</h1>
+    <div className="triply-page contact-page">
+      {/* ============================================================ */}
+      {/* 1. HERO BANNER                                               */}
+      {/* ============================================================ */}
+      <section className="page-hero">
+        <div className="page-hero__bg">
+          <img 
+            src="https://images.unsplash.com/photo-1548574505-5e239809ee19?w=1920&q=80" 
+            alt="Ethiopian sunset landscape" 
+            className="page-hero__img"
+          />
+          <div className="page-hero__overlay"></div>
         </div>
-      </div>
 
-      <section className="section">
-        <div className="container contact-grid">
-          {/* Info Column */}
-          <div className="contact-info">
-            <span className="section-label reveal">We'd Love to Hear From You</span>
-            <span className="gold-divider reveal" />
-            <h2 className="contact-info__title reveal">
-              Let's Plan Your<br />Perfect Ethiopian Journey
-            </h2>
-            <p className="contact-info__sub reveal">
-              Our local travel specialists are ready to craft a personalised itinerary tailored to your interests, budget, and travel dates. Reach out — we typically respond within 24 hours.
-            </p>
-
-            {/* Details */}
-            <div className="contact-details">
-              <div className="contact-detail reveal">
-                <div className="contact-detail__icon"><FiPhone /></div>
-                <div>
-                  <span className="contact-detail__label">Phone</span>
-                  <a href="tel:+251911420000" className="contact-detail__value">+251 911 420 000</a>
-                  <a href="tel:+251116183163" className="contact-detail__value">+251 116 183 163</a>
-                </div>
-              </div>
-              <div className="contact-detail reveal">
-                <div className="contact-detail__icon"><FiMail /></div>
-                <div>
-                  <span className="contact-detail__label">Email</span>
-                  <a href="mailto:info@mychoiceethiopia.com" className="contact-detail__value">info@mychoiceethiopia.com</a>
-                  <a href="mailto:bookings@mychoiceethiopia.com" className="contact-detail__value">bookings@mychoiceethiopia.com</a>
-                </div>
-              </div>
-              <div className="contact-detail reveal">
-                <div className="contact-detail__icon"><FiMapPin /></div>
-                <div>
-                  <span className="contact-detail__label">Office</span>
-                  <span className="contact-detail__value">Bole Airport Road, Around Skylight Hotel</span>
-                  <span className="contact-detail__value">Addis Ababa, Ethiopia</span>
-                </div>
-              </div>
-              <div className="contact-detail reveal">
-                <div className="contact-detail__icon"><FiClock /></div>
-                <div>
-                  <span className="contact-detail__label">Office Hours</span>
-                  <span className="contact-detail__value">Mon–Sat: 8:00 AM – 6:00 PM (EAT)</span>
-                  <span className="contact-detail__value">Sunday: 10:00 AM – 4:00 PM</span>
-                </div>
-              </div>
-            </div>
-
-            {/* WhatsApp */}
-            <a
-              href="https://wa.me/251911420000"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="whatsapp-btn reveal"
-            >
-              <svg viewBox="0 0 24 24" className="whatsapp-btn__icon" fill="currentColor">
-                <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/>
-              </svg>
-              Chat on WhatsApp
-            </a>
-
-            <div className="contact-socials reveal">
-              <a href="#" className="contact-social"><FiInstagram /> Instagram</a>
-              <a href="#" className="contact-social"><FiFacebook /> Facebook</a>
-            </div>
+        <div className="container page-hero__container">
+          <div className="page-hero__breadcrumbs">
+            <Link to="/">Home</Link>
+            <span className="crumb-sep">/</span>
+            <span>Contact & Regional Branches</span>
           </div>
 
-          {/* Form Column */}
-          <div className="contact-form-wrap reveal">
-            {submitted ? (
-              <div className="contact-success">
-                <FiCheckCircle className="contact-success__icon" />
-                <h3>Message Sent!</h3>
-                <p>Thank you for reaching out. One of our travel specialists will get back to you within 24 hours.</p>
+          <h1 className="page-hero__title">
+            Connect With Our <span className="script-accent">regional</span> Offices
+          </h1>
+          <p className="page-hero__subtitle">
+            Direct operational presence in Addis Ababa, Semera, and Mekelle. 
+            Connect with our tour designers and regional operations officers for rapid dispatch.
+          </p>
+        </div>
+      </section>
+
+      {/* ============================================================ */}
+      {/* 2. REGIONAL PHYSICAL BRANCHES                                */}
+      {/* ============================================================ */}
+      <section className="regional-offices-section">
+        <div className="container">
+          <div className="section-header-centered">
+            <span className="section-script-subtitle">Physical Presence</span>
+            <h2 className="section-main-heading">3 Regional Operational Hubs</h2>
+            <p className="section-lead-text">
+              Ensuring on-the-ground support across central, eastern, and northern Ethiopian expedition and humanitarian corridors.
+            </p>
+          </div>
+
+          <div className="branches-grid">
+            {regionalBranches.map((b, i) => (
+              <div key={i} className="branch-card">
+                <div className="branch-header">
+                  <div className="branch-icon-wrap">
+                    <FiMapPin size={20} />
+                  </div>
+                  <div>
+                    <h3 className="branch-title">{b.city}</h3>
+                    <span className="branch-sub">{b.sub}</span>
+                  </div>
+                </div>
+
+                <p className="branch-address">{b.address}</p>
+
+                <div className="branch-meta">
+                  <div className="branch-meta-row">
+                    <FiPhone className="meta-icon" />
+                    <span>{b.phone}</span>
+                  </div>
+                  <div className="branch-meta-row">
+                    <FiMail className="meta-icon" />
+                    <span>{b.email}</span>
+                  </div>
+                  <div className="branch-meta-row">
+                    <FiClock className="meta-icon" />
+                    <span>{b.hours}</span>
+                  </div>
+                </div>
+
+                <div className="branch-lead">
+                  <span className="lead-tag">{b.lead}</span>
+                </div>
               </div>
-            ) : (
-              <form className="contact-form" onSubmit={handleSubmit}>
-                <h3 className="contact-form__title">Send Us a Message</h3>
-                <div className="contact-form__grid">
-                  <div className="contact-form__group">
-                    <label htmlFor="name">Full Name *</label>
-                    <input id="name" name="name" type="text" placeholder="John Smith" value={form.name} onChange={handleChange} required />
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* ============================================================ */}
+      {/* 3. CONTACT FORM & OPERATIONAL DESKS                          */}
+      {/* ============================================================ */}
+      <section className="contact-main-section">
+        <div className="container">
+          <div className="contact-grid">
+            {/* Left Column: Segregated Operational Personnel */}
+            <div className="contact-info-col">
+              <span className="section-script-subtitle">Operational Desks</span>
+              <h2 className="contact-col-title">Segregated Direct Channels</h2>
+              <p className="contact-col-desc">
+                To eliminate delays, your inquiry is routed directly to the specialized division manager responsible for your operational profile:
+              </p>
+
+              <div className="contact-cards-stack">
+                {operationalPersonnel.map((p, idx) => (
+                  <div key={idx} className="contact-info-card">
+                    <div className="contact-card-icon">
+                      {idx === 0 ? <FiCompass size={20} /> : idx === 1 ? <FiTruck size={20} /> : <FiShield size={20} />}
+                    </div>
+                    <div className="contact-card-text">
+                      <strong>{p.role}</strong>
+                      <p className="desk-desc">{p.desk}</p>
+                      <span className="desk-email">{p.contact}</span>
+                    </div>
                   </div>
-                  <div className="contact-form__group">
-                    <label htmlFor="email">Email Address *</label>
-                    <input id="email" name="email" type="email" placeholder="you@example.com" value={form.email} onChange={handleChange} required />
-                  </div>
-                  <div className="contact-form__group">
-                    <label htmlFor="phone">Phone / WhatsApp</label>
-                    <input id="phone" name="phone" type="tel" placeholder="+1 234 567 890" value={form.phone} onChange={handleChange} />
-                  </div>
-                  <div className="contact-form__group">
-                    <label htmlFor="date">Preferred Travel Date</label>
-                    <input id="date" name="date" type="date" value={form.date} onChange={handleChange} />
-                  </div>
+                ))}
+              </div>
+
+              {/* Verified Entity Card */}
+              <div className="contact-trust-box">
+                <div className="trust-badge-item">
+                  <FiShield size={18} className="trust-icon" />
+                  <span>Business License No: 14/666/128419/2005</span>
                 </div>
-                <div className="contact-form__group contact-form__group--full">
-                  <label htmlFor="message">Your Message *</label>
-                  <textarea id="message" name="message" rows="6" placeholder="Tell us about your dream Ethiopian journey — interests, group size, duration..." value={form.message} onChange={handleChange} required />
+                <div className="trust-badge-item">
+                  <FaAward size={18} className="trust-icon" />
+                  <span>Official VAT Registration No: 80692</span>
                 </div>
-                <button type="submit" className="btn btn-primary contact-form__submit" disabled={loading}>
-                  {loading ? (
-                    <span className="contact-form__loading" />
-                  ) : (
-                    <>
-                      <span>Send Message</span>
+                <div className="trust-badge-item">
+                  <FiLock size={18} className="trust-icon" />
+                  <span>Secure Banking Protocol: CBE routing details shared upon contract execution.</span>
+                </div>
+              </div>
+            </div>
+
+            {/* Right Column: Dynamic Inquiry Form (B2C / B2B) */}
+            <div className="contact-form-col">
+              <div className="contact-form-card">
+                {submitted ? (
+                  <div className="form-success-box">
+                    <div className="success-icon-circle">
+                      <FiCheckCircle size={44} />
+                    </div>
+                    <h3 className="success-title">Inquiry Transmitted Successfully!</h3>
+                    <p className="success-text">
+                      Thank you, <strong>{formData.name}</strong>. 
+                      {inquiryType === 'b2b' ? (
+                        <> Your institutional fleet and logistics tender request for <strong>{formData.organization || 'your organization'}</strong> has been assigned to our Commercial Logistics Officer. Our team will contact you at <strong>{formData.email}</strong> with an official proforma and credentials package within 12 hours.</>
+                      ) : (
+                        <> Our senior tour designer has received your travel request regarding <strong>{formData.destination}</strong>. We will formulate a tailored itinerary proposal and reach out to <strong>{formData.email}</strong> within 24 hours.</>
+                      )}
+                    </p>
+                    <button 
+                      className="triply-btn-orange" 
+                      onClick={() => setSubmitted(false)}
+                      style={{ marginTop: '20px' }}
+                    >
+                      Submit Another Inquiry
+                    </button>
+                  </div>
+                ) : (
+                  <form onSubmit={handleSubmit} className="custom-booking-form">
+                    <div className="form-header">
+                      {/* Inquiry Type Switcher */}
+                      <div className="inquiry-type-toggle">
+                        <button
+                          type="button"
+                          className={`type-toggle-btn ${inquiryType === 'b2c' ? 'active' : ''}`}
+                          onClick={() => setInquiryType('b2c')}
+                        >
+                          <FiCompass size={15} />
+                          <span>Private Tour / Holiday</span>
+                        </button>
+                        <button
+                          type="button"
+                          className={`type-toggle-btn ${inquiryType === 'b2b' ? 'active' : ''}`}
+                          onClick={() => setInquiryType('b2b')}
+                        >
+                          <FiTruck size={15} />
+                          <span>Group & Institutional Travel</span>
+                        </button>
+                      </div>
+
+                      <h3 className="form-heading">
+                        {inquiryType === 'b2b' ? 'Request Group / Delegation Travel Proposal' : 'Request Tailor-Made Itinerary'}
+                      </h3>
+                      <span className="form-subheading">
+                        {inquiryType === 'b2b' 
+                          ? 'Prompt quotation and verified vendor pack generation under VAT #80692.'
+                          : 'Fill in your travel preferences and we will craft your bespoke itinerary.'}
+                      </span>
+                    </div>
+
+                    <div className="form-row-2">
+                      <div className="form-group">
+                        <label>Your Full Name *</label>
+                        <input 
+                          type="text" 
+                          required
+                          placeholder="e.g. Eleanor Vance"
+                          value={formData.name}
+                          onChange={(e) => setFormData({...formData, name: e.target.value})}
+                          className="form-input"
+                        />
+                      </div>
+
+                      <div className="form-group">
+                        <label>{inquiryType === 'b2b' ? 'Organization / Agency Name *' : 'Email Address *'}</label>
+                        {inquiryType === 'b2b' ? (
+                          <input 
+                            type="text" 
+                            required
+                            placeholder="e.g. UN Agency / DanChurchAid"
+                            value={formData.organization}
+                            onChange={(e) => setFormData({...formData, organization: e.target.value})}
+                            className="form-input"
+                          />
+                        ) : (
+                          <input 
+                            type="email" 
+                            required
+                            placeholder="e.g. eleanor@example.com"
+                            value={formData.email}
+                            onChange={(e) => setFormData({...formData, email: e.target.value})}
+                            className="form-input"
+                          />
+                        )}
+                      </div>
+                    </div>
+
+                    <div className="form-row-2">
+                      {inquiryType === 'b2b' && (
+                        <div className="form-group">
+                          <label>Official Corporate Email *</label>
+                          <input 
+                            type="email" 
+                            required
+                            placeholder="e.g. procurement@org.org"
+                            value={formData.email}
+                            onChange={(e) => setFormData({...formData, email: e.target.value})}
+                            className="form-input"
+                          />
+                        </div>
+                      )}
+
+                      <div className="form-group">
+                        <label>Phone / WhatsApp *</label>
+                        <input 
+                          type="tel" 
+                          required
+                          placeholder="+251 ..."
+                          value={formData.phone}
+                          onChange={(e) => setFormData({...formData, phone: e.target.value})}
+                          className="form-input"
+                        />
+                      </div>
+
+                      {inquiryType === 'b2c' && (
+                        <div className="form-group">
+                          <label>Destination / Tour of Interest</label>
+                          <input 
+                            type="text" 
+                            value={formData.destination}
+                            onChange={(e) => setFormData({...formData, destination: e.target.value})}
+                            className="form-input"
+                          />
+                        </div>
+                      )}
+                    </div>
+
+                    {inquiryType === 'b2b' ? (
+                      <div className="form-row-2">
+                        <div className="form-group">
+                          <label>Vehicle Configuration Required</label>
+                          <select 
+                            value={formData.vehicleType}
+                            onChange={(e) => setFormData({...formData, vehicleType: e.target.value})}
+                            className="form-select"
+                          >
+                            <option>Toyota Land Cruiser 4x4 Hardtop (Expedition)</option>
+                            <option>Toyota Land Cruiser V8 / Prado (VIP Chauffeur)</option>
+                            <option>Toyota Coaster 30-Seater Bus</option>
+                            <option>Toyota HiAce High-Roof Minivan</option>
+                            <option>Multi-Vehicle Mixed Fleet</option>
+                          </select>
+                        </div>
+
+                        <div className="form-group">
+                          <label>Primary Deployment Hub</label>
+                          <select 
+                            value={formData.operatingHub}
+                            onChange={(e) => setFormData({...formData, operatingHub: e.target.value})}
+                            className="form-select"
+                          >
+                            <option>Addis Ababa HQ & Nationwide</option>
+                            <option>Semera Base (Afar Region)</option>
+                            <option>Mekelle Base (Tigray Region)</option>
+                            <option>Multi-Region Deployment</option>
+                          </select>
+                        </div>
+                      </div>
+                    ) : (
+                      <div className="form-row-2">
+                        <div className="form-group">
+                          <label>Number of Travelers</label>
+                          <select 
+                            value={formData.travelers}
+                            onChange={(e) => setFormData({...formData, travelers: e.target.value})}
+                            className="form-select"
+                          >
+                            <option>Solo Traveler</option>
+                            <option>2 Travelers (Couple)</option>
+                            <option>3 - 5 Travelers (Family/Small Group)</option>
+                            <option>6+ Travelers (Private Group)</option>
+                          </select>
+                        </div>
+
+                        <div className="form-group">
+                          <label>Estimated Travel Dates</label>
+                          <input 
+                            type="text" 
+                            placeholder="e.g. November 2026"
+                            value={formData.travelDate}
+                            onChange={(e) => setFormData({...formData, travelDate: e.target.value})}
+                            className="form-input"
+                          />
+                        </div>
+                      </div>
+                    )}
+
+                    <div className="form-group">
+                      <label>
+                        {inquiryType === 'b2b' 
+                          ? 'Tender Terms, 30-Day Credit Specifics, or Scope Mandates'
+                          : 'Special Interests & Custom Preferences'}
+                      </label>
+                      <textarea 
+                        rows={4}
+                        placeholder={inquiryType === 'b2b' 
+                          ? "Specify mission dates, driver requirements, spare tire mandates, or tender submission deadlines..."
+                          : "Tell us about specific interests: photography, trekking, religious festivals, dietary preferences..."}
+                        value={formData.message}
+                        onChange={(e) => setFormData({...formData, message: e.target.value})}
+                        className="form-textarea"
+                      ></textarea>
+                    </div>
+
+                    <button type="submit" className="triply-btn-orange form-submit-btn">
+                      <span>{inquiryType === 'b2b' ? 'Transmit Institutional Tender RFQ' : 'Send Travel Inquiry'}</span>
                       <FiSend size={16} />
-                    </>
-                  )}
-                </button>
-              </form>
-            )}
+                    </button>
+                  </form>
+                )}
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* ============================================================ */}
+      {/* 4. INTERACTIVE FAQ SECTION                                   */}
+      {/* ============================================================ */}
+      <section className="contact-faq-section">
+        <div className="container">
+          <div className="section-header-centered">
+            <span className="section-script-subtitle">Travel & Procurement</span>
+            <h2 className="section-main-heading">Frequently Asked Questions</h2>
+            <p className="section-lead-text">
+              Key guidance on institutional tender frameworks, 30-day post-paid credit, and private tour preparation.
+            </p>
+          </div>
+
+          <div className="faq-accordion-wrap">
+            {faqs.map((faq, index) => (
+              <div 
+                key={index} 
+                className={`faq-item-card ${openFaq === index ? 'open' : ''}`}
+                onClick={() => setOpenFaq(openFaq === index ? -1 : index)}
+              >
+                <div className="faq-item-header">
+                  <div className="faq-q-left">
+                    <FiHelpCircle size={18} className="faq-q-icon" />
+                    <h3 className="faq-q-text">{faq.q}</h3>
+                  </div>
+                  <FiChevronDown size={20} className={`faq-chevron ${openFaq === index ? 'rotated' : ''}`} />
+                </div>
+                {openFaq === index && (
+                  <div className="faq-item-body">
+                    <p>{faq.a}</p>
+                  </div>
+                )}
+              </div>
+            ))}
           </div>
         </div>
       </section>

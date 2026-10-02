@@ -1,98 +1,140 @@
 import { Link } from 'react-router-dom'
-import { FiPhone, FiMail, FiMapPin, FiInstagram, FiFacebook, FiTwitter, FiYoutube } from 'react-icons/fi'
+import { FiPhone, FiMail, FiMapPin, FiShield, FiLock, FiFileText } from 'react-icons/fi'
+import { FaFacebookF, FaTwitter, FaInstagram, FaYoutube } from 'react-icons/fa'
 import './Footer.css'
 
 const tourLinks = [
-  { label: 'Historical Tours', path: '/tours' },
-  { label: 'Cultural & Tribal Tours', path: '/tours' },
-  { label: 'Adventure & Trekking', path: '/tours' },
-  { label: 'Wildlife & Safari', path: '/tours' },
-  { label: 'Combination Tours', path: '/tours' },
+  { label: 'Historic Circuit (Lalibela & Gondar)', path: '/tours' },
+  { label: 'Omo Valley Tribal Culture', path: '/tours' },
+  { label: 'Danakil Depression Expedition', path: '/tours' },
+  { label: 'Simien Mountains Trekking', path: '/tours' },
+  { label: 'Bale Mountains Wildlife Safari', path: '/tours' },
 ]
 
-const destLinks = [
-  { label: 'Lalibela', path: '/destinations' },
-  { label: 'Simien Mountains', path: '/destinations' },
-  { label: 'Omo Valley', path: '/destinations' },
-  { label: 'Danakil Depression', path: '/destinations' },
-  { label: 'Axum & Gondar', path: '/destinations' },
+const corporateLinks = [
+  { label: 'Corporate Governance Overview', path: '/governance' },
+  { label: 'Anti-Bribery & Corruption Policy', path: '/governance' },
+  { label: 'Occupational Health & Safety (OHS)', path: '/governance' },
+  { label: 'Environmental Stewardship Charter', path: '/governance' },
+  { label: 'Employee Code of Conduct', path: '/governance' },
 ]
 
 export default function Footer() {
   return (
-    <footer className="footer">
-      <div className="footer__top container">
-        {/* Brand */}
-        <div className="footer__brand">
-          <Link to="/" className="footer__logo">
-            <span className="footer__logo-icon">✦</span>
-            <div>
-              <span className="footer__logo-main">MyChoice</span>
-              <span className="footer__logo-sub">Ethiopia</span>
+    <footer className="triply-footer">
+      {/* Compliance & Regulatory Banner */}
+      <div className="triply-footer__compliance-bar">
+        <div className="container triply-footer__comp-inner">
+          <div className="comp-bar-left">
+            <FiShield className="comp-bar-icon" />
+            <span>
+              <strong>Official Registered Ethiopian Enterprise:</strong> Business License No. <strong>14/666/128419/2005</strong> | VAT Registration No. <strong>80692</strong> | SIGTAS Tax Verified
+            </span>
+          </div>
+          <div className="comp-bar-right">
+            <Link to="/governance" className="comp-bar-link">
+              <FiFileText size={14} />
+              <span>Corporate Governance & Compliance</span>
+            </Link>
+          </div>
+        </div>
+      </div>
+
+      <div className="triply-footer__top container">
+        {/* Brand Col */}
+        <div className="triply-footer__brand">
+          <Link to="/" className="triply-footer__logo">
+            <div className="triply-logo__icon-wrap">
+              <img 
+                src="/logo.png" 
+                alt="MyChoice Ethiopia Logo" 
+                style={{ width: '40px', height: '40px', objectFit: 'contain' }} 
+              />
             </div>
+            <span className="triply-footer__brand-name">
+              MyChoice <span style={{ color: '#E26D3C' }}>Ethiopia</span>
+            </span>
           </Link>
-          <p className="footer__tagline">
-            Ethiopia is not just a destination — it's a transformation. Let us show you the Africa the world has yet to discover.
+          <p className="triply-footer__tagline">
+            Dual-funnel Ethiopian travel and institutional fleet enterprise. 
+            Delivering bespoke cultural expeditions alongside rigorous NGO & UN logistics across Addis Ababa, Semera, and Mekelle.
           </p>
-          <div className="footer__socials">
-            <a href="#" aria-label="Instagram" className="footer__social"><FiInstagram /></a>
-            <a href="#" aria-label="Facebook" className="footer__social"><FiFacebook /></a>
-            <a href="#" aria-label="Twitter" className="footer__social"><FiTwitter /></a>
-            <a href="#" aria-label="YouTube" className="footer__social"><FiYoutube /></a>
+          <div className="triply-footer__socials">
+            <a href="https://facebook.com" target="_blank" rel="noreferrer" aria-label="Facebook" className="footer-social-btn"><FaFacebookF /></a>
+            <a href="https://twitter.com" target="_blank" rel="noreferrer" aria-label="Twitter" className="footer-social-btn"><FaTwitter /></a>
+            <a href="https://instagram.com" target="_blank" rel="noreferrer" aria-label="Instagram" className="footer-social-btn"><FaInstagram /></a>
+            <a href="https://youtube.com" target="_blank" rel="noreferrer" aria-label="YouTube" className="footer-social-btn"><FaYoutube /></a>
           </div>
         </div>
 
-        {/* Tour Packages */}
-        <div className="footer__col">
-          <h4 className="footer__col-title">Tour Packages</h4>
-          <ul className="footer__col-links">
-            {tourLinks.map(l => (
-              <li key={l.label}><Link to={l.path}>{l.label}</Link></li>
+        {/* Leisure Tours */}
+        <div className="triply-footer__col">
+          <h4 className="triply-footer__col-title">Premier Tours</h4>
+          <ul className="triply-footer__links">
+            {tourLinks.map((l, i) => (
+              <li key={i}><Link to={l.path}>{l.label}</Link></li>
             ))}
           </ul>
         </div>
 
-        {/* Destinations */}
-        <div className="footer__col">
-          <h4 className="footer__col-title">Destinations</h4>
-          <ul className="footer__col-links">
-            {destLinks.map(l => (
-              <li key={l.label}><Link to={l.path}>{l.label}</Link></li>
+        {/* Corporate & Governance */}
+        <div className="triply-footer__col">
+          <h4 className="triply-footer__col-title">Corporate Governance</h4>
+          <ul className="triply-footer__links">
+            {corporateLinks.map((l, i) => (
+              <li key={i}><Link to={l.path}>{l.label}</Link></li>
             ))}
           </ul>
         </div>
 
-        {/* Contact */}
-        <div className="footer__col">
-          <h4 className="footer__col-title">Get In Touch</h4>
-          <ul className="footer__contact-list">
-            <li>
-              <FiPhone size={15} />
+        {/* Regional Hubs & Contact */}
+        <div className="triply-footer__col">
+          <h4 className="triply-footer__col-title">Regional Hubs</h4>
+          <div className="triply-footer__contact-items">
+            <div className="f-contact-row">
+              <FiPhone className="f-contact-icon" />
               <div>
-                <a href="tel:+251911420000">+251 911 420 000</a>
-                <a href="tel:+251116183163">+251 116 183 163</a>
+                <a href="tel:+251911420000">Addis HQ: +251 911 420 000</a>
+                <span className="hub-sub">Semera & Mekelle Depots 24/7</span>
               </div>
-            </li>
-            <li>
-              <FiMail size={15} />
-              <a href="mailto:info@mychoiceethiopia.com">info@mychoiceethiopia.com</a>
-            </li>
-            <li>
-              <FiMapPin size={15} />
+            </div>
+            <div className="f-contact-row">
+              <FiMail className="f-contact-icon" />
+              <div>
+                <a href="mailto:logistics@mychoiceethiopia.com">logistics@mychoiceethiopia.com</a>
+                <a href="mailto:travel@mychoiceethiopia.com">travel@mychoiceethiopia.com</a>
+              </div>
+            </div>
+            <div className="f-contact-row">
+              <FiMapPin className="f-contact-icon" />
               <span>Bole Airport Road, Around Skylight Hotel, Addis Ababa, Ethiopia</span>
-            </li>
-          </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* Security & Bank Notice */}
+      <div className="triply-footer__security-bar container">
+        <div className="security-bar-inner">
+          <FiLock size={15} className="sec-icon" />
+          <span>
+            <strong>Cybersecurity Notice:</strong> Commercial Bank of Ethiopia (CBE) banking coordinates are strictly withheld from public view for anti-fraud protection and are released upon bilateral execution of agreements.
+          </span>
         </div>
       </div>
 
       {/* Bottom Bar */}
-      <div className="footer__bottom">
-        <div className="container footer__bottom-inner">
-          <p>© {new Date().getFullYear()} MyChoiceEthiopia Tours & Travel. All Rights Reserved.</p>
-          <div className="footer__bottom-links">
-            <Link to="#">Privacy Policy</Link>
-            <Link to="#">Terms & Conditions</Link>
-            <Link to="#">FAQ</Link>
+      <div className="triply-footer__bottom">
+        <div className="container triply-footer__bottom-inner">
+          <p>&copy; {new Date().getFullYear()} MyChoice Ethiopia Tours & Travel. All rights reserved.</p>
+          <div className="triply-footer__legal">
+            <Link to="/governance">Code of Conduct</Link>
+            <span className="dot">&bull;</span>
+            <Link to="/governance">Anti-Bribery Policy</Link>
+            <span className="dot">&bull;</span>
+            <Link to="/contact">Booking Terms</Link>
+            <span className="dot">&bull;</span>
+            <Link to="/contact">Contact Hubs</Link>
           </div>
         </div>
       </div>

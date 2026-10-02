@@ -1,0 +1,668 @@
+/* Corporate & NGO Fleet Logistics Page */
+
+.corporate-fleet-page {
+  background-color: #FAF8F5;
+  color: #2D3748;
+}
+
+/* ============================================================
+   1. Compliance Dashboard Section
+   ============================================================ */
+.compliance-dashboard-section {
+  padding: 60px 0 40px;
+  position: relative;
+  margin-top: -50px;
+  z-index: 10;
+}
+
+.compliance-dashboard-card {
+  background: #FFFFFF;
+  border-radius: 24px;
+  box-shadow: 0 20px 40px rgba(26, 43, 35, 0.08);
+  border: 1px solid rgba(226, 109, 60, 0.15);
+  padding: 40px 48px;
+}
+
+.compliance-header {
+  margin-bottom: 32px;
+  text-align: left;
+}
+
+.comp-badge-wrap {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: rgba(46, 133, 64, 0.1);
+  color: #2E8540;
+  padding: 6px 16px;
+  border-radius: 100px;
+  font-size: 0.78rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  margin-bottom: 12px;
+}
+
+.comp-shield-icon {
+  color: #2E8540;
+}
+
+.compliance-title {
+  font-size: 1.85rem;
+  font-weight: 800;
+  color: #1A2B23;
+  margin-bottom: 8px;
+}
+
+.compliance-sub {
+  color: #64748B;
+  font-size: 0.95rem;
+  max-width: 720px;
+  line-height: 1.6;
+}
+
+.compliance-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 18px;
+  margin-bottom: 32px;
+}
+
+.comp-grid-item {
+  background: #FDFBF7;
+  border: 1px solid rgba(0, 0, 0, 0.06);
+  border-radius: 16px;
+  padding: 16px 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  transition: transform 0.2s ease, border-color 0.2s ease;
+}
+
+.comp-grid-item:hover {
+  transform: translateY(-2px);
+  border-color: #E26D3C;
+}
+
+.comp-label {
+  font-size: 0.78rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: #8C9CA6;
+  font-weight: 600;
+}
+
+.comp-value {
+  font-size: 1.05rem;
+  color: #1A2B23;
+  font-weight: 700;
+}
+
+.compliance-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 24px;
+  flex-wrap: wrap;
+  padding-top: 24px;
+  border-top: 1px solid #EDF2F7;
+}
+
+.security-notice {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  max-width: 680px;
+  font-size: 0.84rem;
+  color: #64748B;
+  line-height: 1.5;
+}
+
+.lock-icon {
+  color: #E26D3C;
+  flex-shrink: 0;
+  margin-top: 2px;
+}
+
+.download-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  padding: 14px 24px;
+  font-size: 0.9rem;
+  font-weight: 600;
+  border: none;
+  cursor: pointer;
+  border-radius: 100px;
+  background-color: #E26D3C;
+  color: #FFFFFF;
+  transition: background-color 0.2s ease, transform 0.2s ease;
+  white-space: nowrap;
+}
+
+.download-btn:hover {
+  background-color: #C85A2B;
+  transform: translateY(-2px);
+}
+
+/* ============================================================
+   2. Credit Terms Section
+   ============================================================ */
+.credit-terms-section {
+  padding: 80px 0;
+  background: #FAF8F5;
+}
+
+.section-header-centered {
+  text-align: center;
+  max-width: 760px;
+  margin: 0 auto 50px;
+}
+
+.section-script-subtitle {
+  display: inline-block;
+  font-family: 'Caveat', cursive;
+  font-size: 1.5rem;
+  color: #E26D3C;
+  margin-bottom: 8px;
+}
+
+.section-main-heading {
+  font-size: 2.3rem;
+  font-weight: 800;
+  color: #1A2B23;
+  line-height: 1.25;
+  margin-bottom: 16px;
+}
+
+.section-lead-text {
+  color: #64748B;
+  font-size: 1.05rem;
+  line-height: 1.65;
+}
+
+.credit-workflow-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 28px;
+}
+
+.workflow-step-card {
+  background: #FFFFFF;
+  border-radius: 20px;
+  padding: 36px 30px;
+  border: 1px solid rgba(0, 0, 0, 0.05);
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.03);
+  position: relative;
+  transition: transform 0.25s ease, box-shadow 0.25s ease;
+}
+
+.workflow-step-card:hover {
+  transform: translateY(-6px);
+  box-shadow: 0 16px 35px rgba(0, 0, 0, 0.07);
+}
+
+.step-num-badge {
+  width: 48px;
+  height: 48px;
+  border-radius: 14px;
+  background: #FAF8F5;
+  color: #E26D3C;
+  border: 1px solid rgba(226, 109, 60, 0.2);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 800;
+  font-size: 1.2rem;
+  margin-bottom: 20px;
+}
+
+.step-title {
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: #1A2B23;
+  margin-bottom: 12px;
+}
+
+.step-desc {
+  color: #64748B;
+  font-size: 0.95rem;
+  line-height: 1.6;
+}
+
+/* ============================================================
+   3. Fleet & Drivers Section
+   ============================================================ */
+.fleet-drivers-section {
+  padding: 80px 0;
+  background: #FFFFFF;
+}
+
+.drivers-highlight-card {
+  background: linear-gradient(135deg, #1A2B23 0%, #2A4538 100%);
+  border-radius: 28px;
+  padding: 50px 56px;
+  box-shadow: 0 25px 50px rgba(26, 43, 35, 0.15);
+  position: relative;
+  overflow: hidden;
+}
+
+.drivers-card-inner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 40px;
+  flex-wrap: wrap;
+}
+
+.drivers-text {
+  flex: 1;
+  min-width: 320px;
+}
+
+.drivers-p {
+  color: #D2DCD6;
+  font-size: 1.05rem;
+  line-height: 1.7;
+  margin-bottom: 28px;
+}
+
+.driver-perks-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: 16px;
+}
+
+.perk-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  color: #FFFFFF;
+  font-size: 0.92rem;
+  font-weight: 500;
+}
+
+.perk-icon {
+  color: #48BB78;
+  font-size: 1.2rem;
+  flex-shrink: 0;
+}
+
+.drivers-stat-badge {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.stat-circle {
+  width: 170px;
+  height: 170px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.08);
+  border: 2px dashed rgba(226, 109, 60, 0.6);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: 16px;
+}
+
+.stat-big {
+  font-size: 3.2rem;
+  font-weight: 900;
+  color: #E26D3C;
+  line-height: 1;
+  margin-bottom: 4px;
+}
+
+.stat-lbl {
+  font-size: 0.8rem;
+  color: #E2E8F0;
+  font-weight: 600;
+  line-height: 1.3;
+}
+
+/* Vehicle Inventory */
+.fleet-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(290px, 1fr));
+  gap: 28px;
+}
+
+.vehicle-card {
+  background: #FDFBF7;
+  border: 1px solid rgba(0, 0, 0, 0.06);
+  border-radius: 22px;
+  overflow: hidden;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.03);
+  display: flex;
+  flex-direction: column;
+  transition: transform 0.25s ease, box-shadow 0.25s ease;
+}
+
+.vehicle-card:hover .v-img {
+  transform: scale(1.05);
+}
+
+.vehicle-card:hover {
+  transform: translateY(-6px);
+  box-shadow: 0 16px 36px rgba(0, 0, 0, 0.08);
+}
+
+.v-img-box {
+  position: relative;
+  height: 220px;
+  overflow: hidden;
+}
+
+.v-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.4s ease;
+}
+
+.v-cat-badge {
+  position: absolute;
+  top: 14px;
+  left: 14px;
+  background: rgba(26, 43, 35, 0.85);
+  backdrop-filter: blur(6px);
+  color: #FFFFFF;
+  padding: 4px 12px;
+  border-radius: 100px;
+  font-size: 0.76rem;
+  font-weight: 600;
+}
+
+.v-body {
+  padding: 24px;
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+}
+
+.v-title {
+  font-size: 1.25rem;
+  font-weight: 800;
+  color: #1A2B23;
+  margin-bottom: 6px;
+}
+
+.v-capacity {
+  font-size: 0.86rem;
+  color: #E26D3C;
+  font-weight: 600;
+  margin-bottom: 12px;
+}
+
+.v-ideal {
+  font-size: 0.88rem;
+  color: #64748B;
+  line-height: 1.5;
+  margin-bottom: 18px;
+}
+
+.v-features {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-bottom: 24px;
+  margin-top: auto;
+}
+
+.v-feature-tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  background: #FFFFFF;
+  border: 1px solid #EDF2F7;
+  padding: 4px 10px;
+  border-radius: 8px;
+  font-size: 0.78rem;
+  color: #4A5568;
+  font-weight: 500;
+}
+
+.tag-check {
+  color: #2E8540;
+}
+
+.btn-lease-inquiry {
+  display: block;
+  text-align: center;
+  padding: 12px 20px;
+  border-radius: 100px;
+  background: #1A2B23;
+  color: #FFFFFF;
+  text-decoration: none;
+  font-weight: 600;
+  font-size: 0.9rem;
+  transition: background-color 0.2s ease;
+}
+
+.btn-lease-inquiry:hover {
+  background: #E26D3C;
+}
+
+/* ============================================================
+   4. Regional Bases Section
+   ============================================================ */
+.regional-bases-section {
+  padding: 80px 0;
+  background: #FAF8F5;
+}
+
+.bases-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 28px;
+}
+
+.base-card {
+  background: #FFFFFF;
+  border-radius: 20px;
+  padding: 34px 28px;
+  border: 1px solid rgba(0, 0, 0, 0.06);
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.03);
+  display: flex;
+  flex-direction: column;
+}
+
+.base-card-top {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 10px;
+}
+
+.base-icon {
+  color: #E26D3C;
+}
+
+.base-city {
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: #1A2B23;
+}
+
+.base-location {
+  display: block;
+  font-size: 0.85rem;
+  color: #E26D3C;
+  font-weight: 600;
+  margin-bottom: 14px;
+}
+
+.base-desc {
+  font-size: 0.92rem;
+  color: #64748B;
+  line-height: 1.6;
+  margin-bottom: 20px;
+}
+
+.base-contact {
+  margin-top: auto;
+  padding-top: 16px;
+  border-top: 1px solid #EDF2F7;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  font-size: 0.84rem;
+  color: #4A5568;
+  font-weight: 600;
+}
+
+/* ============================================================
+   5. RFQ Form Section
+   ============================================================ */
+.b2b-rfq-section {
+  padding: 80px 0 100px;
+  background: #FFFFFF;
+}
+
+.rfq-card {
+  background: #FAF8F5;
+  border-radius: 28px;
+  padding: 50px 60px;
+  border: 1px solid rgba(0, 0, 0, 0.07);
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.04);
+  max-width: 900px;
+  margin: 0 auto;
+}
+
+.rfq-form-header {
+  text-align: center;
+  margin-bottom: 36px;
+}
+
+.rfq-heading {
+  font-size: 2.1rem;
+  font-weight: 800;
+  color: #1A2B23;
+  margin-bottom: 8px;
+}
+
+.rfq-sub {
+  color: #64748B;
+  font-size: 0.95rem;
+}
+
+.rfq-grid-2 {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 20px;
+}
+
+.rfq-grid-3 {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 20px;
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-bottom: 20px;
+}
+
+.form-group label {
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: #1A2B23;
+}
+
+.form-input,
+.form-select,
+.form-textarea {
+  width: 100%;
+  padding: 13px 18px;
+  border-radius: 12px;
+  border: 1px solid #CBD5E0;
+  background: #FFFFFF;
+  font-size: 0.92rem;
+  color: #2D3748;
+  font-family: inherit;
+  outline: none;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.form-input:focus,
+.form-select:focus,
+.form-textarea:focus {
+  border-color: #E26D3C;
+  box-shadow: 0 0 0 3px rgba(226, 109, 60, 0.15);
+}
+
+.form-textarea {
+  resize: vertical;
+}
+
+.rfq-submit-btn {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  padding: 16px 28px;
+  font-size: 1.05rem;
+  font-weight: 700;
+  border: none;
+  border-radius: 100px;
+  background-color: #E26D3C;
+  color: #FFFFFF;
+  cursor: pointer;
+  transition: background-color 0.2s ease, transform 0.2s ease;
+  margin-top: 10px;
+}
+
+.rfq-submit-btn:hover {
+  background-color: #C85A2B;
+  transform: translateY(-2px);
+}
+
+.rfq-success {
+  text-align: center;
+  padding: 30px 10px;
+}
+
+.rfq-success-icon {
+  color: #2E8540;
+  margin-bottom: 18px;
+}
+
+.rfq-success-title {
+  font-size: 1.8rem;
+  font-weight: 800;
+  color: #1A2B23;
+  margin-bottom: 14px;
+}
+
+.rfq-success-desc {
+  color: #4A5568;
+  font-size: 1.05rem;
+  line-height: 1.6;
+  max-width: 650px;
+  margin: 0 auto;
+}
+
+/* ============================================================
+   Responsive Adjustments
+   ============================================================ */
+@media (max-width: 768px) {
+  .compliance-dashboard-card {
+    padding: 30px 20px;
+  }
+  .rfq-card {
+    padding: 36px 20px;
+  }
+  .rfq-grid-2,
+  .rfq-grid-3 {
+    grid-template-columns: 1fr;
+    gap: 0;
+  }
+  .drivers-highlight-card {
+    padding: 36px 24px;
+  }
+}
