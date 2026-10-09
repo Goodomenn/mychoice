@@ -1,4 +1,5 @@
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom'
+import { HelmetProvider } from 'react-helmet-async'
 import Navbar from './components/Navbar'
 import Footer from './components/Footer'
 import Home from './pages/Home'
@@ -12,6 +13,7 @@ import ScrollToTop from './components/ScrollToTop'
 
 function App() {
   return (
+    <HelmetProvider>
     <Router>
       <ScrollToTop />
       <Navbar />
@@ -28,6 +30,7 @@ function App() {
       </main>
       <Footer />
     </Router>
+    </HelmetProvider>
   )
 }
 

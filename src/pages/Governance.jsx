@@ -1,3 +1,4 @@
+import { Helmet } from 'react-helmet-async'
 import { useState } from 'react'
 import { Link } from 'react-router-dom'
 import { 
@@ -108,6 +109,11 @@ export default function Governance() {
 
   return (
     <div className="triply-page governance-page">
+      <Helmet>
+        <title>Governance & Policies | MyChoiceEthiopia</title>
+        <meta name="description" content="Learn about MyChoiceEthiopia's corporate governance, sustainability practices, and policies." />
+        <link rel="canonical" href="https://mychoiceethiopia.com/governance" />
+      </Helmet>
       {/* 1. HERO */}
       <section className="page-hero">
         <div className="page-hero__bg">

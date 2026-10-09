@@ -1,3 +1,4 @@
+import { Helmet } from 'react-helmet-async'
 import { useState, useEffect } from 'react'
 import { Link } from 'react-router-dom'
 import { 
@@ -189,6 +190,11 @@ export default function Home() {
 
   return (
     <div className="triply-home">
+      <Helmet>
+        <title>MyChoiceEthiopia | Premium Ethiopia Tours & Travel Guide</title>
+        <meta name="description" content="Experience the wonders of Ethiopia. From the historic Lalibela churches to the stunning Simien Mountains." />
+        <link rel="canonical" href="https://mychoiceethiopia.com/" />
+      </Helmet>
       {/* ============================================================ */}
       {/* 1. HERO SECTION WITH BACKGROUND SLIDESHOW                    */}
       {/* ============================================================ */}

@@ -1,3 +1,4 @@
+import { Helmet } from 'react-helmet-async'
 import { useState } from 'react'
 import { Link } from 'react-router-dom'
 import { 
@@ -100,6 +101,11 @@ export default function Blog() {
 
   return (
     <div className="triply-page blog-page">
+      <Helmet>
+        <title>Travel Blog | Ethiopia Travel Tips & Guides</title>
+        <meta name="description" content="Read the latest stories, travel tips, and cultural guides about visiting Ethiopia on the MyChoiceEthiopia blog." />
+        <link rel="canonical" href="https://mychoiceethiopia.com/blog" />
+      </Helmet>
       {/* ============================================================ */}
       {/* 1. HERO BANNER                                               */}
       {/* ============================================================ */}

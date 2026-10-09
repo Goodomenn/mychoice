@@ -1,3 +1,4 @@
+import { Helmet } from 'react-helmet-async'
 import { useState, useMemo, useEffect } from 'react'
 import { Link } from 'react-router-dom'
 import { collection, onSnapshot } from 'firebase/firestore'
@@ -151,6 +152,11 @@ export default function Tours() {
 
   return (
     <div className="triply-page tours-page">
+      <Helmet>
+        <title>Ethiopia Tour Packages & Expeditions | MyChoiceEthiopia</title>
+        <meta name="description" content="Browse our comprehensive list of Ethiopian tour packages. Cultural immersion, adventure trekking, historic circuits, and more." />
+        <link rel="canonical" href="https://mychoiceethiopia.com/tours" />
+      </Helmet>
       {/* ============================================================ */}
       {/* 1. PAGE HERO BANNER                                          */}
       {/* ============================================================ */}

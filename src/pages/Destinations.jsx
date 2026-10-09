@@ -1,3 +1,4 @@
+import { Helmet } from 'react-helmet-async'
 import { useState, useEffect } from 'react'
 import { Link } from 'react-router-dom'
 import { collection, onSnapshot } from 'firebase/firestore'
@@ -124,6 +125,11 @@ export default function Destinations() {
 
   return (
     <div className="triply-page destinations-page">
+      <Helmet>
+        <title>Ethiopia Destinations | Lalibela, Danakil, Omo Valley</title>
+        <meta name="description" content="Explore Ethiopia's top destinations including the ancient obelisks of Axum, the castles of Gondar, and the Danakil Depression." />
+        <link rel="canonical" href="https://mychoiceethiopia.com/destinations" />
+      </Helmet>
       {/* ============================================================ */}
       {/* 1. HERO BANNER                                               */}
       {/* ============================================================ */}

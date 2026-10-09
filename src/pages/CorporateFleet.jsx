@@ -1,3 +1,4 @@
+import { Helmet } from 'react-helmet-async'
 import { useState } from 'react'
 import { Link } from 'react-router-dom'
 import { 
@@ -105,6 +106,11 @@ export default function CorporateFleet() {
 
   return (
     <div className="triply-page corporate-fleet-page">
+      <Helmet>
+        <title>Corporate Fleet Logistics | MyChoiceEthiopia</title>
+        <meta name="description" content="Professional corporate fleet and logistics services in Ethiopia." />
+        <link rel="canonical" href="https://mychoiceethiopia.com/corporate-fleet" />
+      </Helmet>
       {/* ============================================================ */}
       {/* 1. HERO BANNER                                               */}
       {/* ============================================================ */}

@@ -1,3 +1,4 @@
+import { Helmet } from 'react-helmet-async'
 import { useState, useEffect } from 'react'
 import { Link, useSearchParams } from 'react-router-dom'
 import { 
@@ -119,6 +120,11 @@ export default function Contact() {
 
   return (
     <div className="triply-page contact-page">
+      <Helmet>
+        <title>Contact MyChoiceEthiopia | Book Your Tour</title>
+        <meta name="description" content="Get in touch with MyChoiceEthiopia to book your premium tour, request a custom itinerary, or inquire about logistics." />
+        <link rel="canonical" href="https://mychoiceethiopia.com/contact" />
+      </Helmet>
       {/* ============================================================ */}
       {/* 1. HERO BANNER                                               */}
       {/* ============================================================ */}
