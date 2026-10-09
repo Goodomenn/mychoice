@@ -1,4 +1,9 @@
+# Robots.txt for MyChoice Ethiopia Tours
 User-agent: *
 Allow: /
 
-Sitemap: https://mychoiceethiopia.com/sitemap.xml
+User-agent: Googlebot
+Allow: /
+
+User-agent: Googlebot-Image
+Allow: /
